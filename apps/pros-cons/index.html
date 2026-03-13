@@ -549,11 +549,11 @@
       <div id="adminTopicsList"></div>
 
       <div class="admin-bar">
-        <button class="admin-bar-btn admin-bar-btn--add"    id="adminAddBtn">+ THÊM CHỦ ĐỀ</button>
-        <button class="admin-bar-btn admin-bar-btn--save"   id="adminSaveBtn">💾 LƯU</button>
+        <button class="admin-bar-btn admin-bar-btn--add"    id="adminAddBtn">+ ADD TOPIC</button>
+        <button class="admin-bar-btn admin-bar-btn--save"   id="adminSaveBtn">💾 SAVE</button>
         <button class="admin-bar-btn admin-bar-btn--export" id="adminExportBtn">⬇ EXPORT JSON</button>
         <button class="admin-bar-btn admin-bar-btn--import" id="adminImportBtn">⬆ IMPORT JSON</button>
-        <button class="admin-bar-btn admin-bar-btn--close"  id="adminCloseBtn">✕ ĐÓNG</button>
+        <button class="admin-bar-btn admin-bar-btn--close"  id="adminCloseBtn">✕ CLOSE</button>
       </div>
 
       <div class="admin-status" id="adminStatus"></div>
@@ -567,7 +567,7 @@
       <div class="admin-import-box" id="adminImportBox">
         <label>Paste JSON vào đây để load:</label>
         <textarea class="admin-import-ta" id="adminImportTa" placeholder='[{"id":1,"topic":"...","passage":"...","pro":{"id":"p1","text":"..."},"con":{"id":"c1","text":"..."}}]'></textarea>
-        <button class="admin-import-apply" id="adminImportApply">▶ ÁP DỤNG</button>
+        <button class="admin-import-apply" id="adminImportApply">▶ APPLY</button>
       </div>
     </div>
   </div>
@@ -582,8 +582,8 @@
     </div>
 
     <div class="score-bar">
-      <div class="score-chip pixel-box" id="progressDisplay">0 / 0 ĐÃ ĐIỀ N</div>
-      <div class="score-chip pixel-box pixel-box--yellow" id="scoreDisplay">ĐIỂM: —</div>
+      <div class="score-chip pixel-box" id="progressDisplay">0 / 0 PLACED</div>
+      <div class="score-chip pixel-box pixel-box--yellow" id="scoreDisplay">SCORE: —</div>
     </div>
 
     <div class="game-area">
@@ -603,7 +603,7 @@
     </div>
 
     <div class="action-bar">
-      <button class="action-btn action-btn--check"      id="checkBtn"    onclick="checkAnswers()">✓ KIỂM TRA</button>
+      <button class="action-btn action-btn--check"      id="checkBtn"    onclick="checkAnswers()">✓ CHECK</button>
       <button class="action-btn action-btn--reset"      id="resetBtn"    onclick="resetGame()">↺ RESET</button>
       <button class="action-btn action-btn--play-again" id="playAgainBtn" onclick="playAgain()">▶ PLAY AGAIN</button>
     </div>
@@ -694,8 +694,8 @@
         const div = document.createElement('div');
         div.className = 'admin-topic-entry';
         div.innerHTML = `
-          <div class="admin-topic-entry__num">CHỦ ĐỀ ${idx + 1}</div>
-          <button class="admin-remove-btn" onclick="adminRemove(${idx})">✕ XÓA</button>
+          <div class="admin-topic-entry__num">TOPIC ${idx + 1}</div>
+          <button class="admin-remove-btn" onclick="adminRemove(${idx})">✕ REMOVE</button>
           <div class="admin-field">
             <label>Tên chủ đề</label>
             <input class="admin-input" data-idx="${idx}" data-field="topic" value="${escHtml(item.topic)}" />
@@ -1064,7 +1064,7 @@
         if (s.pro) filled++;
         if (s.con) filled++;
       });
-      document.getElementById('progressDisplay').textContent = `${filled} / ${total} ĐÃ ĐIỀN`;
+      document.getElementById('progressDisplay').textContent = `${filled} / ${total} PLACED`;
     }
 
     function checkAnswers() {
@@ -1100,8 +1100,8 @@
       ];
       const msg = msgs.find(([min]) => pct >= min)[1];
 
-      document.getElementById('scoreDisplay').textContent = `ĐIỂM: ${correct}/${total}`;
-      document.getElementById('resultScore').textContent  = `${correct} / ${total} ĐÚNG (${pct}%)`;
+      document.getElementById('scoreDisplay').textContent = `SCORE: ${correct}/${total}`;
+      document.getElementById('resultScore').textContent  = `${correct} / ${total} CORRECT (${pct}%)`;
       document.getElementById('resultMsg').textContent    = msg;
       document.getElementById('resultBanner').style.display = 'block';
       document.getElementById('playAgainBtn').style.display = '';
@@ -1117,7 +1117,7 @@
       updateProgress();
       document.getElementById('resultBanner').style.display = 'none';
       document.getElementById('playAgainBtn').style.display = 'none';
-      document.getElementById('scoreDisplay').textContent = 'ĐIỂM: —';
+      document.getElementById('scoreDisplay').textContent = 'SCORE: —';
     }
 
     function playAgain() {
