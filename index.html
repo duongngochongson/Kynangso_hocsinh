@@ -396,17 +396,20 @@
     adminModal.addEventListener('click', e => { if (e.target === adminModal) adminModal.classList.add('hidden'); });
 
     // ===== SESSION TIMER =====
-    const SESSION_KEY = 'pixelverse_session_start';
-    if (!sessionStorage.getItem(SESSION_KEY)) {
-      sessionStorage.setItem(SESSION_KEY, Date.now());
-    }
+    const _sessionStart = Date.now();
     const timerEl = document.getElementById('sessionTimer');
     function updateTimer() {
-      const elapsed = Math.floor((Date.now() - parseInt(sessionStorage.getItem(SESSION_KEY))) / 60000);
-      timerEl.textContent = elapsed + '+';
+      const secs = Math.floor((Date.now() - _sessionStart) / 1000);
+      timerEl.textContent = secs < 60 ? secs + 's' : Math.floor(secs / 60) + '+';
     }
     updateTimer();
-    setInterval(updateTimer, 10000);
+    const _secInterval = setInterval(() => {
+      updateTimer();
+      if (Date.now() - _sessionStart >= 60000) {
+        clearInterval(_secInterval);
+        setInterval(updateTimer, 60000);
+      }
+    }, 1000);
   </script>
 </body>
 </html>
