@@ -323,9 +323,18 @@ section {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(0,255,245,0.04) 0%, transparent 60%);
   pointer-events: none;
 }
+
+/* Per-color ambient gradient overlay */
+.app-card--cyan::before   { background: linear-gradient(135deg, rgba(0,255,245,0.08) 0%, transparent 55%); }
+.app-card--magenta::before{ background: linear-gradient(135deg, rgba(255,0,204,0.08) 0%, transparent 55%); }
+.app-card--yellow::before { background: linear-gradient(135deg, rgba(255,230,0,0.08) 0%, transparent 55%); }
+
+/* Per-color ambient glow at rest */
+.app-card--cyan   { box-shadow: 0 0 18px rgba(0,255,245,0.13); }
+.app-card--magenta{ box-shadow: 0 0 18px rgba(255,0,204,0.13); }
+.app-card--yellow { box-shadow: 0 0 18px rgba(255,230,0,0.13); }
 
 .app-card:hover {
   transform: translate(-4px, -4px);

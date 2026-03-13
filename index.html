@@ -8,6 +8,50 @@
   <style>
     /* ===== HOME-SPECIFIC STYLES ===== */
 
+    /* ===== SPACE BACKGROUND ===== */
+    .hero-space {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 50%, rgba(0,20,60,0.4) 0%, transparent 70%),
+        radial-gradient(circle 70px at 14% 28%, rgba(0,255,245,0.09) 0%, transparent 65%),
+        radial-gradient(circle 44px at 78% 18%, rgba(255,0,204,0.10) 0%, transparent 65%),
+        radial-gradient(circle 90px at 88% 68%, rgba(57,255,20,0.06) 0%, transparent 65%),
+        radial-gradient(circle 55px at 28% 72%, rgba(255,230,0,0.07) 0%, transparent 65%);
+      animation: space-drift 30s ease-in-out infinite alternate;
+    }
+    @keyframes space-drift {
+      from { transform: scale(1)    translateX(0); }
+      to   { transform: scale(1.05) translateX(-8px); }
+    }
+
+    /* ===== QUOTE ===== */
+    .hero-quote {
+      margin-top: 24px;
+      max-width: 560px;
+      text-align: center;
+      padding: 0 1rem;
+    }
+    .hero-quote__text {
+      font-family: var(--font-vi-body);
+      font-size: 14px;
+      font-style: italic;
+      color: rgba(232,232,255,0.55);
+      line-height: 1.7;
+      margin-bottom: 6px;
+      transition: opacity 0.6s;
+    }
+    .hero-quote__author {
+      font-family: var(--font-pixel);
+      font-size: 6px;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      opacity: 0.7;
+      transition: opacity 0.6s;
+    }
+
     .hero-grid {
       position: absolute;
       inset: 0;
@@ -257,6 +301,7 @@
 
   <!-- ===== HERO ===== -->
   <section class="hero">
+    <div class="hero-space"></div>
     <div class="hero-grid"></div>
 
     <div class="pixel-float" style="left:8%;  bottom:0; background:var(--cyan);    animation-duration:7s;  animation-delay:0s;"></div>
@@ -280,9 +325,14 @@
         <span class="stat-item__label">DEVELOPMENT</span>
       </div>
       <div class="stat-item">
-        <span class="stat-item__value" id="sessionTimer">0+</span>
-        <span class="stat-item__label">MINUTES PLAYED</span>
+        <span class="stat-item__value" id="sessionTimer">0s</span>
+        <span class="stat-item__label" id="timerLabel">SECONDS</span>
       </div>
+    </div>
+
+    <div class="hero-quote">
+      <p class="hero-quote__text" id="heroQuoteText"></p>
+      <span class="hero-quote__author" id="heroQuoteAuthor"></span>
     </div>
   </section>
 
@@ -391,12 +441,48 @@
     adminPw.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
     adminModal.addEventListener('click', e => { if (e.target === adminModal) adminModal.classList.add('hidden'); });
 
+    // ===== QUOTE ROTATOR =====
+    const QUOTES = [
+      { text: "The universe is under no obligation to make sense to you.", author: "Neil deGrasse Tyson" },
+      { text: "We are all made of star-stuff.", author: "Carl Sagan" },
+      { text: "Space is big. You just won't believe how vastly, hugely, mind-bogglingly big it is.", author: "Douglas Adams" },
+      { text: "Look up at the stars and not down at your feet.", author: "Stephen Hawking" },
+      { text: "The cosmos is within us. We are made of star-stuff. We are a way for the universe to know itself.", author: "Carl Sagan" },
+      { text: "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.", author: "Albert Einstein" },
+      { text: "Not only is the universe stranger than we think, it is stranger than we can think.", author: "Werner Heisenberg" },
+    ];
+    let _qi = 0;
+    const qText   = document.getElementById('heroQuoteText');
+    const qAuthor = document.getElementById('heroQuoteAuthor');
+    function showQuote(idx) {
+      qText.style.opacity = '0'; qAuthor.style.opacity = '0';
+      setTimeout(() => {
+        qText.textContent   = '\u201c' + QUOTES[idx].text + '\u201d';
+        qAuthor.textContent = '\u2014 ' + QUOTES[idx].author;
+        qText.style.opacity = '1'; qAuthor.style.opacity = '1';
+      }, 600);
+    }
+    showQuote(0);
+    setInterval(() => { _qi = (_qi + 1) % QUOTES.length; showQuote(_qi); }, 9000);
+
     // ===== SESSION TIMER =====
-    const _sessionStart = Date.now();
-    const timerEl = document.getElementById('sessionTimer');
+    const _navType = performance.getEntriesByType('navigation')[0]?.type;
+    const _SK = 'pv_start';
+    if (_navType === 'reload' || !sessionStorage.getItem(_SK)) {
+      sessionStorage.setItem(_SK, Date.now());
+    }
+    const _sessionStart = parseInt(sessionStorage.getItem(_SK));
+    const timerEl    = document.getElementById('sessionTimer');
+    const timerLabel = document.getElementById('timerLabel');
     function updateTimer() {
       const secs = Math.floor((Date.now() - _sessionStart) / 1000);
-      timerEl.textContent = secs < 60 ? secs + 's' : Math.floor(secs / 60) + '+';
+      if (secs < 60) {
+        timerEl.textContent    = secs + 's';
+        timerLabel.textContent = 'SECONDS';
+      } else {
+        timerEl.textContent    = Math.floor(secs / 60) + '+';
+        timerLabel.textContent = 'MINUTES PLAYED';
+      }
     }
     updateTimer();
     const _secInterval = setInterval(() => {
