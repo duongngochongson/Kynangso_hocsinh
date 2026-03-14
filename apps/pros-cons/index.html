@@ -562,7 +562,7 @@
   <nav class="navbar">
     <a href="../../index.html" class="navbar__logo">◈ PIXELVERSE</a>
     <ul class="navbar__links">
-      <li><a href="../../index.html">HOME</a></li>
+      <li><a href="../../index.html" title="Home">🏠</a></li>
       <li>
         <button class="navbar__grid-btn" id="gamesBtn" title="Games">
           <span class="navbar__grid-btn__dots">
@@ -1210,15 +1210,12 @@
 
     function resetGame() {
       checked = false;
-      initDropState();
-      // Clear zone result classes
-      document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('correct','wrong'));
-      renderTopics();
-      renderPool();
-      updateProgress();
+      document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('correct', 'wrong'));
       document.getElementById('resultBanner').style.display = 'none';
       document.getElementById('playAgainBtn').style.display = 'none';
+      document.getElementById('checkBtn').style.display = '';
       document.getElementById('scoreDisplay').textContent = 'SCORE: —';
+      updateProgress();
     }
 
     async function playAgain() {

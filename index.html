@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PIXELVERSE — Apps &amp; Games</title>
+  <title>PIXELVERSE</title>
   <link rel="stylesheet" href="css/style.css" />
   <script src="js/sfx.js"></script>
   <script src="js/admin-auth.js"></script>
@@ -240,7 +240,7 @@
   <nav class="navbar">
     <a href="index.html" class="navbar__logo">◈ PIXELVERSE</a>
     <ul class="navbar__links">
-      <li><a href="index.html" class="active">HOME</a></li>
+      <li><a href="index.html" class="active" title="Home">🏠</a></li>
       <li>
         <button class="navbar__grid-btn" id="gamesBtn" title="Games">
           <span class="navbar__grid-btn__dots">
@@ -358,8 +358,9 @@
         <span class="app-card__btn">▶ PLAY</span>
       </article>
 
-      <!-- Card 2: Coming Soon -->
-      <article class="app-card pixel-box app-card--magenta" onclick="location.href='apps/mind-map/index.html'" style="cursor:pointer">
+      <!-- Card 2: Sơ đồ Tư Duy -->
+      <article class="app-card pixel-box app-card--magenta" onclick="SFX.navigate();location.href='apps/mind-map/index.html'" style="cursor:pointer">
+        <div class="app-card__icon">🐙</div>
         <h3 class="app-card__title font-vi-h">Sơ đồ Tư Duy</h3>
         <p class="app-card__desc">Kéo thả từ khóa, nối quan hệ, hoàn thiện sơ đồ</p>
         <a href="apps/mind-map/index.html" class="app-card__btn">▶ PLAY</a>
