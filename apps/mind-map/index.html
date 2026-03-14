@@ -129,10 +129,10 @@
     }
     .row-nodes {
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+      justify-content: space-evenly;
       align-items: center;
       flex: 1;
+      flex-wrap: wrap;
     }
 
     /* ===== NODE ===== */
@@ -152,7 +152,6 @@
       border-color: var(--yellow);
       box-shadow: 0 0 14px rgba(255,230,0,0.5);
     }
-    .map-node.drag-before { border-left: 3px solid var(--yellow); }
     .map-node.correct {
       border-color: var(--green);
       box-shadow: 0 0 10px rgba(57,255,20,0.4);
@@ -241,6 +240,28 @@
     }
     .map-line.correct { stroke: var(--green);  stroke-dasharray: none; opacity: 1; }
     .map-line.wrong   { stroke: var(--orange); stroke-dasharray: none; opacity: 1; }
+
+    /* ===== CONNECTION DELETE BUTTON ===== */
+    .conn-delete-btn {
+      position: absolute;
+      width: 20px; height: 20px;
+      background: var(--orange);
+      border: 2px solid var(--white);
+      color: var(--white);
+      font-size: 11px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transform: translate(-50%, -50%);
+      border-radius: 0;
+      padding: 0;
+      line-height: 1;
+    }
+    .map-canvas:hover .conn-delete-btn,
+    .admin-map-canvas:hover .conn-delete-btn { display: flex; }
+    .conn-delete-btn:hover { background: #ff3333; }
 
     /* ===== KEYWORD POOL ===== */
     .kw-pool-section {
@@ -843,6 +864,12 @@
         if (isAdmin) {
           adminPlacements[dkid] = idx;
           adminDragKid = null;
+          // Remove connections where both endpoints are now in the same row
+          adminConnections.forEach(key => {
+            const [a, b] = cpair(key);
+            if (adminPlacements[a] !== undefined && adminPlacements[b] !== undefined
+                && adminPlacements[a] === adminPlacements[b]) adminConnections.delete(key);
+          });
           renderAdminPool(); renderAdminPlaced(); refreshAdminConnections();
         } else {
           // Remove from old rowOrder
@@ -855,6 +882,12 @@
           if (!rowOrder[idx]) rowOrder[idx] = [];
           if (!rowOrder[idx].includes(dkid)) rowOrder[idx].push(dkid);
           dragKid = null;
+          // Remove connections where both endpoints are now in the same row
+          connections.forEach(key => {
+            const [a, b] = cpair(key);
+            if (placements[a] !== undefined && placements[b] !== undefined
+                && placements[a] === placements[b]) connections.delete(key);
+          });
           renderGamePool(); renderGamePlaced(); refreshGameConnections(); updateProgress();
         }
       });
@@ -1020,42 +1053,8 @@
         document.querySelectorAll(rowSel).forEach(r => r.classList.add('accepting'));
       });
 
-      // Drag over another node in same row → intra-row reorder (game only)
-      if (!isAdmin) {
-        div.addEventListener('dragover', e => {
-          if (!dragKid || dragKid === kw.id) return;
-          const dragRow = placements[dragKid];
-          const overRow = placements[kw.id];
-          if (dragRow !== undefined && dragRow === overRow) {
-            e.preventDefault();
-            e.stopPropagation(); // don't let row get it
-            div.classList.add('drag-before');
-          }
-        });
-        div.addEventListener('dragleave', () => div.classList.remove('drag-before'));
-        div.addEventListener('drop', e => {
-          div.classList.remove('drag-before');
-          if (!dragKid || dragKid === kw.id) return;
-          const dragRow = placements[dragKid];
-          const overRow = placements[kw.id];
-          if (dragRow !== undefined && dragRow === overRow) {
-            e.preventDefault();
-            e.stopPropagation();
-            // Insert dragKid before kw.id in rowOrder
-            const order = rowOrder[dragRow] || [];
-            const fi = order.indexOf(dragKid);
-            if (fi !== -1) order.splice(fi, 1);
-            const ti = order.indexOf(kw.id);
-            order.splice(ti !== -1 ? ti : order.length, 0, dragKid);
-            rowOrder[dragRow] = order;
-            dragKid = null;
-            renderGamePlaced(); refreshGameConnections();
-          }
-        });
-      }
-
       div.addEventListener('dragend', () => {
-        div.classList.remove('dragging', 'drag-before');
+        div.classList.remove('dragging');
         document.querySelectorAll(rowSel).forEach(r => r.classList.remove('accepting', 'drag-over'));
         if (isAdmin) adminDragKid = null; else dragKid = null;
       });
@@ -1144,10 +1143,6 @@
     function drawLines(conns, plcmts, canvasEl, svgEl, isAdmin, correctSet) {
       svgEl.innerHTML = '';
       const ns  = 'http://www.w3.org/2000/svg';
-      const mid = isAdmin ? 'arr-a' : 'arr-g';
-      const defs = document.createElementNS(ns, 'defs');
-      defs.innerHTML = `<marker id="${mid}" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" style="fill:var(--cyan)"/></marker>`;
-      svgEl.appendChild(defs);
 
       conns.forEach(key => {
         const [kA, kB] = cpair(key);
@@ -1167,23 +1162,48 @@
         line.setAttribute('x1', p1.x); line.setAttribute('y1', p1.y);
         line.setAttribute('x2', p2.x); line.setAttribute('y2', p2.y);
         line.setAttribute('class', cls);
-        line.setAttribute('marker-end', `url(#${mid})`);
         svgEl.appendChild(line);
       });
     }
 
+    function renderConnectionBtns(conns, plcmts, canvasEl, svgEl, isAdmin) {
+      canvasEl.querySelectorAll('.conn-delete-btn').forEach(b => b.remove());
+      conns.forEach(key => {
+        const [kA, kB] = cpair(key);
+        const rowA = plcmts[kA], rowB = plcmts[kB];
+        if (rowA === undefined || rowB === undefined) return;
+        const upper = rowA <= rowB ? kA : kB;
+        const lower = rowA <= rowB ? kB : kA;
+        const p1 = getDotPos(upper, 'bottom', canvasEl, svgEl);
+        const p2 = getDotPos(lower, 'top',    canvasEl, svgEl);
+        if (!p1 || !p2) return;
+        const btn = document.createElement('button');
+        btn.className = 'conn-delete-btn';
+        btn.textContent = '✕';
+        btn.style.left = ((p1.x + p2.x) / 2) + 'px';
+        btn.style.top  = ((p1.y + p2.y) / 2) + 'px';
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          if (isAdmin) { adminConnections.delete(key); refreshAdminConnections(); }
+          else { connections.delete(key); refreshGameConnections(); updateProgress(); }
+        });
+        canvasEl.appendChild(btn);
+      });
+    }
+
     function refreshGameConnections(correctSet) {
-      drawLines(connections, placements,
-        document.getElementById('mapCanvas'),
-        document.getElementById('mapSvg'),
-        false, correctSet || null);
+      const canvas = document.getElementById('mapCanvas');
+      const svg    = document.getElementById('mapSvg');
+      drawLines(connections, placements, canvas, svg, false, correctSet || null);
+      if (!checked) renderConnectionBtns(connections, placements, canvas, svg, false);
+      else canvas.querySelectorAll('.conn-delete-btn').forEach(b => b.remove());
     }
 
     function refreshAdminConnections() {
-      drawLines(adminConnections, adminPlacements,
-        document.querySelector('.admin-map-canvas'),
-        document.getElementById('adminMapSvg'),
-        true, null);
+      const canvas = document.querySelector('.admin-map-canvas');
+      const svg    = document.getElementById('adminMapSvg');
+      drawLines(adminConnections, adminPlacements, canvas, svg, true, null);
+      renderConnectionBtns(adminConnections, adminPlacements, canvas, svg, true);
     }
 
     window.addEventListener('resize', () => {
