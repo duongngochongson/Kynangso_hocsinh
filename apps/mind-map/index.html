@@ -61,19 +61,6 @@
     }
     .score-chip--yellow { color: var(--yellow); }
 
-    /* ===== CONNECT HINT ===== */
-    .connect-hint {
-      text-align: center;
-      font-family: var(--font-pixel);
-      font-size: 7px;
-      min-height: 18px;
-      margin-bottom: 16px;
-      color: var(--grey);
-      letter-spacing: 1px;
-      transition: color 0.15s;
-      padding: 0 12px;
-    }
-    .connect-hint.active { color: var(--yellow); }
 
     /* ===== MAP LAYOUT ===== */
     .map-layout {
@@ -580,7 +567,7 @@
   <nav class="navbar">
     <a href="../../index.html" class="navbar__logo">◈ PIXELVERSE</a>
     <ul class="navbar__links">
-      <li><a href="../../index.html">HOME</a></li>
+      <li><a href="../../index.html" title="Home">🏠</a></li>
       <li>
         <button class="navbar__grid-btn" id="gamesBtn" title="Games">
           <span class="navbar__grid-btn__dots">
@@ -690,8 +677,6 @@
       <div class="score-chip pixel-box" id="progressDisplay">0 / 0 PLACED</div>
       <div class="score-chip score-chip--yellow pixel-box pixel-box--yellow" id="scoreDisplay">SCORE: —</div>
     </div>
-
-    <div class="connect-hint" id="connectHint">Click a node to select · click another row's node to connect · ✕ button to remove from canvas</div>
 
     <div class="map-layout">
       <div class="map-canvas" id="mapCanvas">
@@ -803,21 +788,12 @@
       renderGamePool();
       refreshGameConnections();
       updateProgress();
-      setConnectHint("Click a node to select · click another row's node to connect · ✕ to remove", false);
       document.getElementById('resultBanner').style.display = 'none';
       document.getElementById('playAgainBtn').style.display = 'none';
       document.getElementById('checkBtn').style.display = '';
       document.getElementById('scoreDisplay').textContent = 'SCORE: —';
     }
 
-    // ================================================================
-    //  CONNECT HINT
-    // ================================================================
-    function setConnectHint(msg, active) {
-      const el = document.getElementById('connectHint');
-      el.textContent = msg;
-      el.classList.toggle('active', active);
-    }
 
     // ================================================================
     //  GAME: ROWS
@@ -881,6 +857,7 @@
           if (!rowOrder[idx]) rowOrder[idx] = [];
           if (!rowOrder[idx].includes(dkid)) rowOrder[idx].push(dkid);
           dragKid = null;
+          SFX.place();
           // Remove connections where both endpoints are now in the same row
           connections.forEach(key => {
             const [a, b] = cpair(key);
@@ -927,6 +904,7 @@
       div.addEventListener('dragstart', e => {
         if (!isAdmin && checked) { e.preventDefault(); return; }
         if (isAdmin) adminDragKid = kw.id; else dragKid = kw.id;
+        if (!isAdmin) SFX.select();
         div.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
         document.querySelectorAll(rowSel).forEach(r => r.classList.add('accepting'));
@@ -941,6 +919,7 @@
       div.addEventListener('touchstart', () => {
         if (!isAdmin && checked) return;
         if (isAdmin) adminDragKid = kw.id; else dragKid = kw.id;
+        if (!isAdmin) SFX.select();
         document.querySelectorAll(rowSel).forEach(r => r.classList.add('accepting'));
       }, { passive: true });
       div.addEventListener('touchend', e => {
@@ -1047,6 +1026,7 @@
         e.stopPropagation();
         if (!isAdmin && checked) { e.preventDefault(); return; }
         if (isAdmin) adminDragKid = kw.id; else dragKid = kw.id;
+        if (!isAdmin) SFX.select();
         div.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
         document.querySelectorAll(rowSel).forEach(r => r.classList.add('accepting'));
@@ -1078,8 +1058,6 @@
         document.querySelectorAll('#mapCanvas .map-node').forEach(n => n.classList.remove('selected'));
         document.querySelector(`#mapCanvas .map-node[data-kid="${kid}"]`)?.classList.add('selected');
         SFX.select();
-        const txt = gameData.keywords.find(k => k.id === kid)?.text || kid;
-        setConnectHint(`↗ "${txt}" selected — click another row's node to link`, true);
       } else if (selectedNodeId === kid) {
         clearGameSelection();
       } else {
@@ -1089,7 +1067,6 @@
           SFX.wrong();
           const n = document.querySelector(`#mapCanvas .map-node[data-kid="${kid}"]`);
           if (n) { n.classList.add('shake'); setTimeout(() => n.classList.remove('shake'), 400); }
-          setConnectHint('✕ Same row — can only connect nodes in different rows', true);
           setTimeout(() => clearGameSelection(), 600);
         } else {
           const key = ck(selectedNodeId, kid);
@@ -1105,7 +1082,6 @@
     function clearGameSelection() {
       selectedNodeId = null;
       document.querySelectorAll('#mapCanvas .map-node').forEach(n => n.classList.remove('selected'));
-      setConnectHint("Click a node to select · click another row's node to connect · ✕ to remove", false);
     }
 
     // Update connection count badges on all nodes
@@ -1320,14 +1296,15 @@
     }
 
     function resetGame() {
-      checked = false; placements = {}; connections = new Set(); rowOrder = {}; selectedNodeId = null;
-      poolOrder = shuffle(gameData.keywords.map(kw => kw.id));
-      renderGameRows(); renderGamePool(); refreshGameConnections(); updateProgress();
-      setConnectHint("Click a node to select · click another row's node to connect · ✕ to remove", false);
+      checked = false;
+      clearGameSelection();
+      document.querySelectorAll('#mapCanvas .map-node').forEach(n => n.classList.remove('correct', 'wrong'));
+      refreshGameConnections();
       document.getElementById('resultBanner').style.display = 'none';
       document.getElementById('playAgainBtn').style.display = 'none';
       document.getElementById('checkBtn').style.display = '';
       document.getElementById('scoreDisplay').textContent = 'SCORE: —';
+      updateProgress();
     }
 
     async function playAgain() { gameData = await loadGameData(); buildGame(); }
