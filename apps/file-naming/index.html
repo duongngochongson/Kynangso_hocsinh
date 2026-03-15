@@ -368,22 +368,20 @@
     /* ===== ADMIN ===== */
     .admin-panel {
       position: fixed;
-      top: 0; right: -400px;
-      width: min(400px, 100vw);
-      height: 100%;
-      background: var(--bg-mid);
-      border-left: 2px solid var(--yellow);
-      z-index: 200;
+      inset: 0;
+      z-index: 500;
+      display: none;
       overflow-y: auto;
-      transition: right 0.3s steps(4);
-      padding: 24px 20px 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      background: var(--bg-dark);
+    }
+    .admin-panel.open { display: flex; align-items: center; justify-content: center; }
+    .admin-panel__inner {
+      max-width: 520px;
+      width: 100%;
+      padding: 28px 24px 40px;
+      position: relative;
       text-align: center;
     }
-    .admin-panel.open { right: 0; }
     .admin-panel__title {
       font-size: 10px;
       color: var(--yellow);
@@ -392,7 +390,7 @@
     }
     .admin-panel__close {
       position: absolute;
-      top: 16px; right: 16px;
+      top: 28px; right: 24px;
       background: transparent;
       border: 2px solid var(--yellow);
       color: var(--yellow);
@@ -467,12 +465,14 @@
 
   <!-- ===== ADMIN PANEL ===== -->
   <div class="admin-panel" id="adminPanel">
-    <div class="admin-panel__title" id="adminPanelTitle">⚙ ADMIN — 🐟 ĐẶT TÊN FILE</div>
-    <button class="admin-panel__close" id="adminClose">✕ CLOSE</button>
-    <div class="admin-random-msg">
-      <strong>⚙ Trò này ngẫu nhiên</strong>
-      Cấu trúc vũ trụ cố định. Mỗi lần chơi sẽ hỏi 10 hành tinh ngẫu nhiên.<br><br>
-      Không cần chỉnh nội dung.
+    <div class="admin-panel__inner">
+      <div class="admin-panel__title" id="adminPanelTitle">⚙ ADMIN — 🐟 ĐẶT TÊN FILE</div>
+      <button class="admin-panel__close" id="adminClose">✕ CLOSE</button>
+      <div class="admin-random-msg">
+        <strong>⚙ Trò này ngẫu nhiên</strong>
+        Cấu trúc vũ trụ cố định. Mỗi lần chơi sẽ hỏi 10 hành tinh ngẫu nhiên.<br><br>
+        Không cần chỉnh nội dung.
+      </div>
     </div>
   </div>
 
