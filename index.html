@@ -233,6 +233,48 @@
       transition: all 0.1s;
     }
     .admin-settings-close:hover { border-color: var(--white); color: var(--white); }
+
+    /* ===== GAME ADMIN IFRAME OVERLAY ===== */
+    .game-admin-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 600;
+      background: var(--bg-dark);
+      display: flex;
+      flex-direction: column;
+    }
+    .game-admin-overlay.hidden { display: none; }
+    .game-admin-back {
+      flex-shrink: 0;
+      font-family: var(--font-pixel);
+      font-size: 8px;
+      padding: 10px 18px;
+      background: var(--bg-card2);
+      border: none;
+      border-bottom: 2px solid var(--grey);
+      color: var(--cyan);
+      cursor: pointer;
+      letter-spacing: 1px;
+      text-align: left;
+      transition: background 0.1s;
+    }
+    .game-admin-back:hover { background: var(--bg-card); color: var(--white); }
+    .game-admin-iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+    }
+
+    /* ===== ADMIN PANEL FONTS ===== */
+    .admin-settings-inner,
+    .admin-settings-inner * {
+      font-family: 'Montserrat', sans-serif;
+    }
+    .admin-settings-title {
+      font-family: var(--font-pixel) !important;
+    }
+    .admin-game-name { font-size: 15px; }
+    .admin-settings-sub { font-size: 15px; }
   </style>
 </head>
 <body>
@@ -290,31 +332,49 @@
         <div class="admin-game-item">
           <div class="admin-game-info">
             <span class="admin-game-icon">🐺</span>
+            <div>
+              <div class="admin-game-name">Đoán Ưu/Nhược</div>
+            </div>
           </div>
-          <a href="apps/pros-cons/index.html?admin=open" target="_blank" class="admin-game-edit-btn">✏ EDIT</a>
+          <button class="admin-game-edit-btn" onclick="openGameAdmin('apps/pros-cons/index.html?admin=open')">✏ EDIT</button>
         </div>
         <div class="admin-game-item">
           <div class="admin-game-info">
             <span class="admin-game-icon">🐙</span>
+            <div>
+              <div class="admin-game-name">Sơ đồ Tư Duy</div>
+            </div>
           </div>
-          <a href="apps/mind-map/index.html?admin=open" target="_blank" class="admin-game-edit-btn">✏ EDIT</a>
+          <button class="admin-game-edit-btn" onclick="openGameAdmin('apps/mind-map/index.html?admin=open')">✏ EDIT</button>
         </div>
         <div class="admin-game-item">
           <div class="admin-game-info">
             <span class="admin-game-icon">🐿️</span>
+            <div>
+              <div class="admin-game-name">Nối Từ</div>
+            </div>
           </div>
-          <a href="apps/matching/index.html?admin=open" target="_blank" class="admin-game-edit-btn">✏ EDIT</a>
+          <button class="admin-game-edit-btn" onclick="openGameAdmin('apps/matching/index.html?admin=open')">✏ EDIT</button>
         </div>
         <div class="admin-game-item">
           <div class="admin-game-info">
             <span class="admin-game-icon">🐟</span>
+            <div>
+              <div class="admin-game-name">Đặt Tên File</div>
+            </div>
           </div>
-          <a href="apps/file-naming/index.html?admin=open" target="_blank" class="admin-game-edit-btn">✏ EDIT</a>
+          <button class="admin-game-edit-btn" onclick="openGameAdmin('apps/file-naming/index.html?admin=open')">✏ EDIT</button>
         </div>
       </div>
 
       <button class="admin-settings-close" id="adminSettingsClose">✕ CLOSE</button>
     </div>
+  </div>
+
+  <!-- ===== GAME ADMIN IFRAME OVERLAY ===== -->
+  <div class="game-admin-overlay hidden" id="gameAdminOverlay">
+    <button class="game-admin-back" id="gameAdminBack">◀ BACK</button>
+    <iframe class="game-admin-iframe" id="gameAdminIframe" src="about:blank"></iframe>
   </div>
 
   <!-- ===== HERO ===== -->
@@ -426,6 +486,21 @@
       onLogin() { adminSettingsPanel.classList.remove('hidden'); }
     });
     adminSettingsClose.addEventListener('click', () => adminSettingsPanel.classList.add('hidden'));
+
+    // ===== GAME ADMIN IFRAME OVERLAY =====
+    const gameAdminOverlay = document.getElementById('gameAdminOverlay');
+    const gameAdminIframe  = document.getElementById('gameAdminIframe');
+    const gameAdminBack    = document.getElementById('gameAdminBack');
+
+    function openGameAdmin(url) {
+      adminSettingsPanel.classList.add('hidden');
+      gameAdminIframe.src = url;
+      gameAdminOverlay.classList.remove('hidden');
+    }
+    gameAdminBack.addEventListener('click', () => {
+      gameAdminOverlay.classList.add('hidden');
+      gameAdminIframe.src = 'about:blank';
+    });
 
     // ===== QUOTE ROTATOR =====
     const QUOTES = [

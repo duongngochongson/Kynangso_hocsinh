@@ -12,7 +12,7 @@
 const ADMIN_PW = 'admin123';
 
 function isAdminLoggedIn() {
-  return sessionStorage.getItem('adminLoggedIn') === '1';
+  return localStorage.getItem('adminLoggedIn') === '1';
 }
 
 function initAdminAuth({ onLogin }) {
@@ -49,7 +49,7 @@ function initAdminAuth({ onLogin }) {
 
   function doLogin() {
     if (adminPw.value === ADMIN_PW) {
-      sessionStorage.setItem('adminLoggedIn', '1');
+      localStorage.setItem('adminLoggedIn', '1');
       adminModal.classList.add('hidden');
       refreshBtn();
       onLogin();
