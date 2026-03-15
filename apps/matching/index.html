@@ -280,26 +280,29 @@
     /* ===== ADMIN PANEL ===== */
     .admin-panel {
       position: fixed;
-      top: 0; right: -480px;
-      width: min(480px, 100vw);
-      height: 100%;
-      background: var(--bg-mid);
-      border-left: 2px solid var(--yellow);
-      z-index: 200;
+      inset: 0;
+      z-index: 500;
+      display: none;
       overflow-y: auto;
-      transition: right 0.3s steps(4);
-      padding: 24px 20px 40px;
+      background: var(--bg-dark);
     }
-    .admin-panel.open { right: 0; }
+    .admin-panel.open { display: block; }
+    .admin-panel__inner {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+      position: relative;
+    }
     .admin-panel__title {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--yellow);
+      text-shadow: 0 0 10px var(--yellow);
       letter-spacing: 2px;
       margin-bottom: 20px;
     }
     .admin-panel__close {
       position: absolute;
-      top: 16px; right: 16px;
+      top: 28px; right: 24px;
       background: transparent;
       border: 2px solid var(--yellow);
       color: var(--yellow);
@@ -528,13 +531,15 @@
 
   <!-- ===== ADMIN PANEL ===== -->
   <div class="admin-panel" id="adminPanel">
-    <div class="admin-panel__title" id="adminPanelTitle">⚙ ADMIN — 🐿️ NỐI TỪ</div>
-    <button class="admin-panel__close" id="adminClose">✕ CLOSE</button>
+    <div class="admin-panel__inner">
+      <div class="admin-panel__title" id="adminPanelTitle">⚙ ADMIN — 🐿️ NỐI TỪ</div>
+      <button class="admin-panel__close" id="adminClose">✕ CLOSE</button>
 
-    <button class="admin-add-set-btn" id="adminAddSetBtn">＋ ADD SET</button>
-    <div id="adminSetList"></div>
+      <button class="admin-add-set-btn" id="adminAddSetBtn">＋ ADD SET</button>
+      <div id="adminSetList"></div>
 
-    <button class="admin-save-btn" id="adminSaveBtn">💾 SAVE</button>
+      <button class="admin-save-btn" id="adminSaveBtn">💾 SAVE</button>
+    </div>
   </div>
 
   <!-- ===== MAIN ===== -->
@@ -610,13 +615,22 @@
     // ================================================================
     //  DATA LOADING
     // ================================================================
+    let _cachedMatchingJson = null;
     async function loadGameData() {
-      // Try localStorage first (admin saved)
+      // 1. localStorage (in-session admin saves take priority)
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         try { return JSON.parse(saved); } catch(e) {}
       }
-      // Fallback to bundled data
+      // 2. admin/admin_matching.json (source of truth on GitHub)
+      if (!_cachedMatchingJson) {
+        try {
+          const r = await fetch('../../admin/admin_matching.json');
+          if (r.ok) _cachedMatchingJson = await r.json();
+        } catch(e) {}
+      }
+      if (_cachedMatchingJson) return JSON.parse(JSON.stringify(_cachedMatchingJson));
+      // 3. Built-in fallback
       if (window.MATCHING_DATA) return JSON.parse(JSON.stringify(window.MATCHING_DATA));
       return [];
     }

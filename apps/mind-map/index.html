@@ -650,7 +650,7 @@
       <div class="admin-status" id="adminStatus"></div>
 
       <div class="admin-export-box" id="adminExportBox">
-        <label>Download or copy → paste into <strong style="color:var(--cyan)">admin_content.json</strong>:</label>
+        <label>Download or copy → paste into <strong style="color:var(--cyan)">admin/admin_mind_map.json</strong>:</label>
         <textarea class="admin-export-ta" id="adminExportTa" readonly></textarea>
         <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">
           <button class="admin-copy-btn admin-copy-btn--dl" id="adminDownloadBtn">⬇ DOWNLOAD FILE</button>
@@ -764,7 +764,7 @@
       const saved = localStorage.getItem('mindMap');
       if (saved) { try { return JSON.parse(saved)[0]; } catch(e) {} }
       if (!_cachedJson) {
-        try { const r = await fetch('./admin_content.json'); if (r.ok) _cachedJson = await r.json(); } catch(e) {}
+        try { const r = await fetch('../../admin/admin_mind_map.json'); if (r.ok) _cachedJson = await r.json(); } catch(e) {}
       }
       if (_cachedJson) return _cachedJson[0];
       return (window.MIND_MAP_DATA || [])[0] || null;
@@ -1536,7 +1536,7 @@
     document.getElementById('adminDownloadBtn').addEventListener('click', () => {
       const blob = new Blob([document.getElementById('adminExportTa').value], { type: 'application/json' });
       const url  = URL.createObjectURL(blob);
-      const a = Object.assign(document.createElement('a'), { href: url, download: 'admin_content.json' });
+      const a = Object.assign(document.createElement('a'), { href: url, download: 'admin_mind_map.json' });
       document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
       const btn = document.getElementById('adminDownloadBtn');
       btn.textContent = '✓ DOWNLOADED!';

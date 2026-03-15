@@ -620,7 +620,7 @@
       <div class="admin-status" id="adminStatus"></div>
 
       <div class="admin-export-box" id="adminExportBox">
-        <label>Tải file hoặc copy nội dung → paste vào <strong>admin_content.json</strong> trên GitHub:</label>
+        <label>Tải file hoặc copy nội dung → paste vào <strong>admin/admin_pros_cons.json</strong> trên GitHub:</label>
         <textarea class="admin-export-ta" id="adminExportTa" readonly></textarea>
         <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">
           <button class="admin-copy-btn admin-copy-btn--download" id="adminDownloadBtn">⬇ DOWNLOAD FILE</button>
@@ -814,7 +814,7 @@
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement('a');
       a.href = url;
-      a.download = 'admin_content.json';
+      a.download = 'admin_pros_cons.json';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -861,7 +861,7 @@
     //  GAME DATA & STATE
     // ================================================================
     let gameData = [];
-    let _cachedJsonData = null; // cache fetched admin_content.json
+    let _cachedJsonData = null; // cache fetched admin_pros_cons.json
 
     async function loadGameData() {
       // 1. localStorage (in-session admin saves take priority)
@@ -869,10 +869,10 @@
       if (saved) {
         try { return JSON.parse(saved); } catch(e) {}
       }
-      // 2. admin_content.json (source of truth on GitHub)
+      // 2. admin/admin_pros_cons.json (source of truth on GitHub)
       if (!_cachedJsonData) {
         try {
-          const res = await fetch('./admin_content.json');
+          const res = await fetch('../../admin/admin_pros_cons.json');
           if (res.ok) _cachedJsonData = await res.json();
         } catch(e) {}
       }

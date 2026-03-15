@@ -143,10 +143,10 @@
     .admin-settings-inner {
       background: var(--bg-card);
       border: 3px solid var(--yellow);
-      box-shadow: 0 0 30px rgba(255,230,0,0.3);
-      max-width: 460px;
-      width: 100%;
-      padding: 28px 24px;
+      box-shadow: 0 0 40px rgba(255,230,0,0.3);
+      max-width: 560px;
+      width: calc(100% - 2rem);
+      padding: 32px 28px;
       margin: 1rem;
     }
     .admin-settings-title {
@@ -291,25 +291,25 @@
           <div class="admin-game-info">
             <span class="admin-game-icon">🐺</span>
           </div>
-          <a href="apps/pros-cons/index.html?admin=open" class="admin-game-edit-btn">✏ EDIT</a>
+          <a href="apps/pros-cons/index.html?admin=open" target="_blank" class="admin-game-edit-btn">✏ EDIT</a>
         </div>
         <div class="admin-game-item">
           <div class="admin-game-info">
             <span class="admin-game-icon">🐙</span>
           </div>
-          <a href="apps/mind-map/index.html?admin=open" class="admin-game-edit-btn">✏ EDIT</a>
+          <a href="apps/mind-map/index.html?admin=open" target="_blank" class="admin-game-edit-btn">✏ EDIT</a>
         </div>
         <div class="admin-game-item">
           <div class="admin-game-info">
             <span class="admin-game-icon">🐿️</span>
           </div>
-          <a href="apps/matching/index.html?admin=open" class="admin-game-edit-btn">✏ EDIT</a>
+          <a href="apps/matching/index.html?admin=open" target="_blank" class="admin-game-edit-btn">✏ EDIT</a>
         </div>
         <div class="admin-game-item">
           <div class="admin-game-info">
             <span class="admin-game-icon">🐟</span>
           </div>
-          <a href="apps/file-naming/index.html?admin=open" class="admin-game-edit-btn">✏ EDIT</a>
+          <a href="apps/file-naming/index.html?admin=open" target="_blank" class="admin-game-edit-btn">✏ EDIT</a>
         </div>
       </div>
 
@@ -335,7 +335,7 @@
 
     <div class="stats-bar">
       <div class="stat-item">
-        <span class="stat-item__value">4</span>
+        <span class="stat-item__value" id="gameCount">4+</span>
         <span class="stat-item__label">GAMES</span>
       </div>
       <div class="stat-item">
@@ -413,6 +413,10 @@
       }
     });
     document.addEventListener('click', () => gamesPopup.classList.remove('open'));
+
+    // ===== GAME COUNTER =====
+    document.getElementById('gameCount').textContent =
+      document.querySelectorAll('.app-card').length + '+';
 
     // ===== ADMIN LOGIN =====
     const adminSettingsPanel = document.getElementById('adminSettingsPanel');
