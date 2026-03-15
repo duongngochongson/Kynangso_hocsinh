@@ -64,6 +64,50 @@
       ["Keel", "Lava", "Onyx"], ["Rust", "Woad"], ["Prig", "Swab", "Knit", "Flog"], ["Waif"], ["Gyro", "Brig", "Swag"]
     ]
   },
+  "promptOrder": [
+    {
+      "id": 1,
+      "parts": [
+        { "type": "role", "text": "Bạn là trợ lý AI thông minh và thân thiện." },
+        { "type": "task", "text": "Tóm tắt đoạn văn sau thành 3 gạch đầu dòng ngắn gọn." }
+      ]
+    },
+    {
+      "id": 2,
+      "parts": [
+        { "type": "role", "text": "Bạn là chuyên gia marketing kỹ thuật số." },
+        { "type": "context", "text": "Công ty đang ra mắt ứng dụng học ngôn ngữ mới dành cho học sinh cấp 2." },
+        { "type": "task", "text": "Viết bài mô tả sản phẩm cho trang landing page." },
+        { "type": "output", "text": "Bài viết dài 150–200 từ, hấp dẫn và có lời kêu gọi hành động rõ ràng." }
+      ]
+    },
+    {
+      "id": 3,
+      "parts": [
+        { "type": "role", "text": "Bạn là nhà báo công nghệ với 10 năm kinh nghiệm." },
+        { "type": "context", "text": "AI đang thay đổi ngành báo chí toàn cầu một cách nhanh chóng." },
+        { "type": "task", "text": "Viết bài phân tích tác động của AI đối với nghề báo hiện đại." },
+        { "type": "output", "text": "Bài viết khoảng 500 từ, chia thành 3–4 đoạn có tiêu đề phụ." },
+        { "type": "style", "text": "Văn phong chuyên nghiệp nhưng dễ hiểu cho người đọc phổ thông." }
+      ]
+    },
+    {
+      "id": 4,
+      "parts": [
+        { "type": "context", "text": "Người dùng muốn học cách nấu phở tại nhà lần đầu tiên." },
+        { "type": "task", "text": "Liệt kê nguyên liệu và các bước nấu phở bò cơ bản." }
+      ]
+    },
+    {
+      "id": 5,
+      "parts": [
+        { "type": "role", "text": "Bạn là giáo viên tiếng Anh cấp trung học cơ sở." },
+        { "type": "task", "text": "Chữa lỗi ngữ pháp trong đoạn văn tiếng Anh sau của học sinh." },
+        { "type": "output", "text": "Trình bày bản chữa và giải thích ngắn gọn từng lỗi sai." },
+        { "type": "reference", "text": "Dựa theo quy tắc ngữ pháp trong Cambridge Grammar in Use (Elementary)." }
+      ]
+    }
+  ],
   "prosCons": [
     {
       "id": 1,

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🐜 — PIXELVERSE</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%2300fff5'>◈</text></svg>">
+  <link rel="stylesheet" href="../../css/style.css" />
+  <script src="../../js/sfx.js"></script>
+  <style>
+    /* ===== PAGE LAYOUT ===== */
+    .game-page {
+      position: relative; z-index: 2;
+      max-width: 800px; margin: 0 auto;
+      padding: 28px 1.5rem 120px;
+    }
+    .po-title-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .po-page-title {
+      font-family: var(--font-pixel);
+      font-size: clamp(13px, 3vw, 18px);
+      color: var(--yellow); text-shadow: 0 0 10px var(--yellow);
+      letter-spacing: 2px;
+    }
+    .po-score {
+      font-size: 9px; letter-spacing: 1px;
+      color: var(--green); text-shadow: 0 0 6px var(--green);
+    }
+
+    /* ===== QUESTION AREA ===== */
+    .po-q-header {
+      font-size: 9px; letter-spacing: 2px;
+      color: var(--grey); margin-bottom: 14px;
+    }
+    .po-q-number {
+      color: var(--yellow); text-shadow: 0 0 6px var(--yellow);
+    }
+    .po-hint {
+      font-size: 9px; color: var(--grey); letter-spacing: 0.5px;
+      margin-bottom: 16px; font-style: italic;
+    }
+
+    /* ===== CARDS ===== */
+    .po-cards {
+      display: flex; flex-direction: column; gap: 8px;
+      min-height: 60px;
+    }
+    .po-card {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 14px;
+      border: 2px solid rgba(255,255,255,0.1);
+      background: var(--bg-card2);
+      cursor: grab; transition: border-color 0.15s, opacity 0.15s;
+      user-select: none;
+    }
+    .po-card:hover { border-color: rgba(255,255,255,0.25); }
+    .po-card.dragging { opacity: 0.4; cursor: grabbing; }
+    .po-card.drag-over { border-color: var(--yellow); box-shadow: 0 0 8px rgba(255,230,0,0.3); }
+    .po-card.po-correct { border-color: var(--green); box-shadow: 0 0 8px rgba(57,255,20,0.25); }
+    .po-card.po-wrong   { border-color: var(--magenta); box-shadow: 0 0 8px rgba(255,0,204,0.25); }
+    .po-handle {
+      font-size: 14px; color: var(--grey);
+      flex-shrink: 0; margin-top: 1px; cursor: grab;
+      letter-spacing: -2px;
+    }
+    .po-badge {
+      font-size: 8px; letter-spacing: 1.5px;
+      padding: 2px 7px; border: 1px solid;
+      flex-shrink: 0; margin-top: 2px;
+      white-space: nowrap;
+    }
+    .po-text {
+      font-size: 12px; color: var(--white); line-height: 1.55;
+      flex: 1;
+    }
+
+    /* Type badge colors */
+    .po-badge--role      { color: var(--cyan);    border-color: var(--cyan); }
+    .po-badge--context   { color: var(--magenta); border-color: var(--magenta); }
+    .po-badge--task      { color: var(--green);   border-color: var(--green); }
+    .po-badge--output    { color: var(--yellow);  border-color: var(--yellow); }
+    .po-badge--style     { color: #ff9966;        border-color: #ff9966; }
+    .po-badge--reference { color: #aa88ff;        border-color: #aa88ff; }
+    .po-badge--other     { color: var(--grey);    border-color: var(--grey); }
+
+    /* ===== CORRECT ORDER REFERENCE (shown after check) ===== */
+    .po-correct-ref {
+      margin-top: 16px; padding: 12px 14px;
+      border: 1px solid rgba(57,255,20,0.3);
+      background: rgba(57,255,20,0.04);
+      display: none;
+    }
+    .po-correct-ref.visible { display: block; }
+    .po-correct-ref__label {
+      font-size: 8px; letter-spacing: 2px; color: var(--green); margin-bottom: 8px;
+    }
+    .po-correct-ref__list {
+      font-size: 9px; color: var(--grey); letter-spacing: 0.5px; line-height: 1.8;
+    }
+
+    /* ===== BOTTOM ANSWER BAR ===== */
+    .fn-answer-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      border-top: 2px solid var(--cyan);
+      box-shadow: 0 -4px 16px rgba(0,255,245,0.1);
+      padding: 10px 16px;
+      background: var(--bg-mid);
+      display: flex; align-items: center;
+      gap: 12px; flex-wrap: wrap;
+      z-index: 50;
+    }
+    .fn-q-nav { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .fn-nav-btn {
+      background: transparent; border: 2px solid var(--grey);
+      color: var(--grey); font-size: 16px; padding: 2px 8px;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .fn-nav-btn:hover:not(:disabled) { border-color: var(--cyan); color: var(--cyan); }
+    .fn-nav-btn:disabled { opacity: 0.3; cursor: default; }
+    .fn-q-label { font-size: 9px; color: var(--yellow); letter-spacing: 1px; min-width: 50px; text-align: center; }
+    .fn-check-btn {
+      font-family: var(--font-pixel); font-size: 8px; letter-spacing: 2px;
+      padding: 8px 18px; border: none; cursor: pointer;
+      background: var(--green); color: var(--bg-dark);
+      box-shadow: 0 0 10px var(--green); transition: all 0.15s;
+    }
+    .fn-check-btn:hover { box-shadow: 0 0 18px var(--green); }
+    .fn-dots { display: flex; gap: 5px; flex-shrink: 0; }
+    .fn-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--grey); cursor: pointer; border: none; padding: 0;
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+    .fn-dot.active   { background: var(--yellow); box-shadow: 0 0 5px var(--yellow); }
+    .fn-dot.answered { background: var(--green); box-shadow: 0 0 4px var(--green); }
+    .fn-dot.wrong-q  { background: var(--magenta); }
+
+    /* ===== RESULT BANNER ===== */
+    .result-banner {
+      display: none; position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); z-index: 100;
+      text-align: center; padding: 32px 48px;
+      border: 2px solid var(--green); background: var(--bg-dark);
+      box-shadow: 0 0 40px rgba(57,255,20,0.2);
+    }
+    .result-banner__score { font-size: 14px; color: var(--green); text-shadow: 0 0 10px var(--green); margin-bottom: 8px; }
+    .result-banner__msg   { font-size: 10px; color: var(--white); letter-spacing: 1px; margin-bottom: 16px; }
+    .result-banner__btn   { font-family: var(--font-pixel); font-size: 8px; letter-spacing: 2px; padding: 8px 20px; border: none; cursor: pointer; background: var(--cyan); color: var(--bg-dark); box-shadow: 0 0 10px var(--cyan); }
+
+    /* ===== EMPTY STATE ===== */
+    .po-empty { text-align: center; padding: 60px 20px; color: var(--grey); font-size: 11px; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="../../index.html" class="navbar__logo">◈ PIXELVERSE</a>
+    <ul class="navbar__links">
+      <li><a href="../../index.html" title="Home">🏠</a></li>
+      <li>
+        <button class="navbar__grid-btn" id="gamesBtn" title="Games">
+          <span class="navbar__grid-btn__dots">
+            <span class="navbar__grid-dot"></span><span class="navbar__grid-dot"></span><span class="navbar__grid-dot"></span>
+            <span class="navbar__grid-dot"></span><span class="navbar__grid-dot"></span><span class="navbar__grid-dot"></span>
+            <span class="navbar__grid-dot"></span><span class="navbar__grid-dot"></span><span class="navbar__grid-dot"></span>
+          </span>
+        </button>
+      </li>
+      <li><a class="navbar__admin-btn" href="../admin/">⚙</a></li>
+    </ul>
+  </nav>
+
+  <div class="navbar__games-popup" id="gamesPopup">
+    <div class="navbar__games-list">
+      <a href="../pros-cons/index.html" class="navbar__game-item">🐺</a>
+      <a href="../mind-map/index.html" class="navbar__game-item">🐙</a>
+      <a href="../matching/index.html" class="navbar__game-item">🐿️</a>
+      <a href="../file-naming/index.html" class="navbar__game-item">🐟</a>
+      <div class="navbar__game-item navbar__game-item--active">🐜</div>
+      <a href="../calculator/index.html" class="navbar__game-item">🐬</a>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="game-page">
+    <div class="po-title-row">
+      <h1 class="po-page-title" id="pageTitle">🐜 Sắp xếp Prompt</h1>
+      <span class="po-score" id="scoreDisplay">SCORE: — / —</span>
+    </div>
+    <div class="po-q-header">
+      CÂU <span class="po-q-number" id="qNumber">1</span> — KÉO THẢ ĐỂ SẮP XẾP ĐÚNG THỨ TỰ
+    </div>
+    <p class="po-hint">Thứ tự chuẩn: Vai trò → Bối cảnh → Nhiệm vụ → Đầu ra → Phong cách → Tham khảo → Khác</p>
+    <div class="po-cards" id="poCards"></div>
+    <div class="po-correct-ref" id="poCorrectRef">
+      <div class="po-correct-ref__label">✓ THỨ TỰ ĐÚNG</div>
+      <div class="po-correct-ref__list" id="poCorrectList"></div>
+    </div>
+    <div id="poEmpty" class="po-empty" style="display:none">Chưa có câu hỏi nào. Thêm trong Admin.</div>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="fn-answer-bar" id="fnAnswerBar">
+    <div class="fn-q-nav">
+      <button class="fn-nav-btn" id="fnPrevQ">◀</button>
+      <span class="fn-q-label" id="fnQLabel">Q1/5</span>
+      <button class="fn-nav-btn" id="fnNextQ">▶</button>
+    </div>
+    <div style="flex:1"></div>
+    <button class="fn-check-btn" id="fnCheckBtn">✓ CHECK</button>
+    <div class="fn-dots" id="fnDots"></div>
+  </div>
+
+  <!-- RESULT BANNER -->
+  <div class="result-banner" id="resultBanner">
+    <div class="result-banner__score" id="resultScore"></div>
+    <div class="result-banner__msg" id="resultMsg"></div>
+    <button class="result-banner__btn" id="resultContinueBtn">▶ TIẾP TỤC</button>
+  </div>
+
+  <script>
+    // ================================================================
+    //  CONSTANTS
+    // ================================================================
+    const GAME_EMOJI = '🐜';
+    const TYPE_ORDER  = ['role','context','task','output','style','reference','other'];
+    const TYPE_LABELS = { role:'Vai trò', context:'Bối cảnh', task:'Nhiệm vụ', output:'Đầu ra', style:'Phong cách', reference:'Tham khảo', other:'Khác' };
+
+    // ================================================================
+    //  STATE
+    // ================================================================
+    let questions    = [];
+    let draftOrders  = {};   // qIdx → [part obj, ...]
+    let correctOrders = {};  // qIdx → [part obj, ...]
+    let checkResults = {};   // qIdx → { isCorrect, partResults:[bool,...] }
+    let currentQ     = 0;
+    let totalQ       = 0;
+    let dragSrcIdx   = null;
+
+    // ================================================================
+    //  DATA LOAD
+    // ================================================================
+    async function loadData() {
+      const saved = localStorage.getItem('promptOrder');
+      if (saved) { try { questions = JSON.parse(saved); } catch(e) {} }
+      if (!questions.length) {
+        try {
+          const r = await fetch('../../data/admin_content.json');
+          if (r.ok) { const d = await r.json(); questions = d.promptOrder || []; }
+        } catch(e) {}
+      }
+    }
+
+    // ================================================================
+    //  INIT
+    // ================================================================
+    async function initGame() {
+      document.title = `${GAME_EMOJI} — PIXELVERSE`;
+      document.getElementById('pageTitle').textContent = `${GAME_EMOJI} Sắp xếp Prompt`;
+
+      await loadData();
+
+      if (!questions.length) {
+        document.getElementById('poEmpty').style.display = '';
+        document.getElementById('fnAnswerBar').style.display = 'none';
+        return;
+      }
+
+      totalQ = questions.length;
+      questions.forEach((q, i) => {
+        correctOrders[i] = [...q.parts].sort((a, b) =>
+          TYPE_ORDER.indexOf(a.type) - TYPE_ORDER.indexOf(b.type));
+
+        // Shuffle until not already in correct order (best effort)
+        let shuffled = [...q.parts].sort(() => Math.random() - 0.5);
+        if (q.parts.length > 1) {
+          let tries = 0;
+          while (tries++ < 20 && shuffled.every((p, j) => p.type === correctOrders[i][j].type)) {
+            shuffled = [...q.parts].sort(() => Math.random() - 0.5);
+          }
+        }
+        draftOrders[i] = shuffled;
+      });
+
+      buildDots();
+      goToQ(0);
+
+      document.getElementById('fnCheckBtn').addEventListener('click', doCheck);
+      document.getElementById('fnPrevQ').addEventListener('click', () => {
+        if (currentQ > 0) { SFX.navigate(); goToQ(currentQ - 1); }
+      });
+      document.getElementById('fnNextQ').addEventListener('click', () => {
+        if (currentQ < totalQ - 1) { SFX.navigate(); goToQ(currentQ + 1); }
+      });
+      document.getElementById('resultContinueBtn').addEventListener('click', () => {
+        document.getElementById('resultBanner').style.display = 'none';
+        const wrongIdx = questions.findIndex((_, i) => checkResults[i] && !checkResults[i].isCorrect);
+        if (wrongIdx !== -1) goToQ(wrongIdx);
+      });
+    }
+
+    // ================================================================
+    //  NAVIGATION
+    // ================================================================
+    function goToQ(idx) {
+      currentQ = idx;
+      document.getElementById('qNumber').textContent = idx + 1;
+      document.getElementById('fnQLabel').textContent = `Q${idx + 1}/${totalQ}`;
+      document.getElementById('fnPrevQ').disabled = idx === 0;
+      document.getElementById('fnNextQ').disabled = idx === totalQ - 1;
+      renderCards();
+      updateDots();
+    }
+
+    // ================================================================
+    //  CARDS RENDER
+    // ================================================================
+    function renderCards() {
+      const container = document.getElementById('poCards');
+      container.innerHTML = '';
+      const parts   = draftOrders[currentQ];
+      const results = checkResults[currentQ];
+      const refEl   = document.getElementById('poCorrectRef');
+
+      parts.forEach((part, idx) => {
+        const card = document.createElement('div');
+        card.className = 'po-card';
+        if (results) card.classList.add(results.partResults[idx] ? 'po-correct' : 'po-wrong');
+
+        const handle = document.createElement('span');
+        handle.className = 'po-handle';
+        handle.innerHTML = '&#8801;';
+
+        const badge = document.createElement('span');
+        badge.className = `po-badge po-badge--${part.type}`;
+        badge.textContent = TYPE_LABELS[part.type] || part.type;
+
+        const text = document.createElement('span');
+        text.className = 'po-text';
+        text.textContent = part.text;
+
+        card.appendChild(handle);
+        card.appendChild(badge);
+        card.appendChild(text);
+        makeDraggable(card, idx);
+        container.appendChild(card);
+      });
+
+      // Show/hide correct reference after check
+      if (results && !results.isCorrect) {
+        refEl.classList.add('visible');
+        const correct = correctOrders[currentQ];
+        document.getElementById('poCorrectList').innerHTML =
+          correct.map((p, i) => `<span style="color:var(--grey)">${i+1}.</span> <span class="po-badge po-badge--${p.type}" style="font-size:8px;padding:1px 5px;border:1px solid">${TYPE_LABELS[p.type]}</span> ${p.text}`).join('<br>');
+      } else {
+        refEl.classList.remove('visible');
+      }
+    }
+
+    // ================================================================
+    //  DRAG AND DROP
+    // ================================================================
+    function makeDraggable(card, idx) {
+      card.addEventListener('dragstart', e => {
+        dragSrcIdx = idx;
+        card.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      card.addEventListener('dragend', () => {
+        card.classList.remove('dragging');
+        document.querySelectorAll('.po-card.drag-over').forEach(c => c.classList.remove('drag-over'));
+      });
+      card.addEventListener('dragover', e => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        document.querySelectorAll('.po-card.drag-over').forEach(c => c.classList.remove('drag-over'));
+        card.classList.add('drag-over');
+      });
+      card.addEventListener('dragleave', () => card.classList.remove('drag-over'));
+      card.addEventListener('drop', e => {
+        e.preventDefault();
+        if (dragSrcIdx === null || dragSrcIdx === idx) return;
+        SFX.click();
+        const arr = draftOrders[currentQ];
+        const [item] = arr.splice(dragSrcIdx, 1);
+        arr.splice(idx, 0, item);
+        // Clear check result for this Q if user re-arranges
+        if (checkResults[currentQ]) { delete checkResults[currentQ]; }
+        dragSrcIdx = null;
+        renderCards();
+        updateDots();
+      });
+    }
+
+    // ================================================================
+    //  CHECK
+    // ================================================================
+    function doCheck() {
+      let correct = 0;
+      questions.forEach((_, i) => {
+        const draft   = draftOrders[i];
+        const correct_order = correctOrders[i];
+        const partResults = draft.map((p, j) => p.type === correct_order[j].type);
+        const isCorrect = partResults.every(Boolean);
+        checkResults[i] = { isCorrect, partResults };
+        if (isCorrect) correct++;
+      });
+
+      SFX[correct === totalQ ? 'correct' : 'wrong']();
+      renderCards();
+      updateDots();
+      updateScore(correct);
+      showFinalResults(correct);
+    }
+
+    function showFinalResults(correct) {
+      const pct = Math.round(correct / totalQ * 100);
+      const msgs = [
+        [100, '🏆 Hoàn hảo! Bạn nắm vững cấu trúc prompt chuẩn!'],
+        [70,  '🎉 Rất tốt! Còn một vài thứ tự chưa đúng.'],
+        [40,  '👍 Khá ổn! Hãy xem lại thứ tự chuẩn của từng phần.'],
+        [0,   '💪 Chưa đạt! Ôn lại cấu trúc prompt và thử lại nhé.'],
+      ];
+      const msg = msgs.find(([min]) => pct >= min)[1];
+      document.getElementById('resultScore').textContent = `${correct} / ${totalQ} ĐÚNG (${pct}%)`;
+      document.getElementById('resultMsg').textContent = msg;
+      document.getElementById('resultBanner').style.display = 'block';
+    }
+
+    function updateScore(correct) {
+      document.getElementById('scoreDisplay').textContent = `SCORE: ${correct} / ${totalQ}`;
+    }
+
+    // ================================================================
+    //  DOTS
+    // ================================================================
+    function buildDots() {
+      const container = document.getElementById('fnDots');
+      container.innerHTML = '';
+      for (let i = 0; i < totalQ; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'fn-dot';
+        dot.addEventListener('click', () => { SFX.click(); goToQ(i); });
+        container.appendChild(dot);
+      }
+    }
+
+    function updateDots() {
+      document.querySelectorAll('.fn-dot').forEach((dot, i) => {
+        dot.className = 'fn-dot';
+        if (i === currentQ)                          dot.classList.add('active');
+        else if (checkResults[i]?.isCorrect)         dot.classList.add('answered');
+        else if (checkResults[i] && !checkResults[i].isCorrect) dot.classList.add('wrong-q');
+      });
+    }
+
+    // ================================================================
+    //  GAMES POPUP
+    // ================================================================
+    const gamesBtn   = document.getElementById('gamesBtn');
+    const gamesPopup = document.getElementById('gamesPopup');
+    gamesBtn.addEventListener('click', e => {
+      e.stopPropagation(); SFX.click(); gamesPopup.classList.toggle('open');
+      if (gamesPopup.classList.contains('open')) {
+        const r = gamesBtn.getBoundingClientRect();
+        gamesPopup.style.left = (r.left + r.width / 2) + 'px';
+        gamesPopup.style.top  = (r.bottom + 6) + 'px';
+      }
+    });
+    document.addEventListener('click', () => gamesPopup.classList.remove('open'));
+
+    // ================================================================
+    //  START
+    // ================================================================
+    initGame();
+  </script>
+</body>
+</html>
