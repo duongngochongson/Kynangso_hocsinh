@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PIXELVERSE — Admin</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙</text></svg>">
+  <link rel="stylesheet" href="../../css/style.css" />
+  <script src="../../js/sfx.js"></script>
+  <style>
+    * { font-family: 'Montserrat', sans-serif; }
+
+    .admin-page { max-width: 860px; margin: 0 auto; padding: 40px 20px 100px; }
+
+    /* ===== AUTH ===== */
+    .auth-section { text-align: center; padding: 48px 0 32px; }
+    .auth-title {
+      font-family: var(--font-pixel);
+      font-size: 13px; color: var(--yellow);
+      text-shadow: 0 0 14px var(--yellow);
+      letter-spacing: 3px; margin-bottom: 32px;
+    }
+    .auth-form { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .auth-input {
+      padding: 12px 16px; background: var(--bg-card2);
+      border: 2px solid var(--grey); color: var(--white);
+      font-size: 16px; outline: none; width: 220px;
+    }
+    .auth-input:focus { border-color: var(--yellow); }
+    .auth-btn {
+      padding: 12px 24px; background: var(--yellow); color: var(--bg-dark);
+      border: none; font-size: 15px; font-weight: 700;
+      cursor: pointer; letter-spacing: 1px;
+    }
+    .auth-btn:hover { box-shadow: 0 0 16px rgba(255,230,0,0.5); }
+    .auth-error { color: var(--orange); margin-top: 10px; font-size: 14px; min-height: 20px; }
+    .auth-ok { font-size: 13px; color: var(--green); margin-top: 10px; }
+
+    /* ===== GAME SECTIONS (ACCORDION) ===== */
+    .game-sections { display: none; border-top: 2px solid var(--grey); }
+    .game-sections.visible { display: block; }
+
+    .game-block { border-bottom: 2px solid var(--grey); }
+    .game-header {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; background: none; border: none;
+      padding: 20px 4px; cursor: pointer; color: var(--white);
+      font-size: 18px; font-weight: 600;
+    }
+    .game-header:hover { color: var(--cyan); }
+    .game-header-left { display: flex; align-items: center; gap: 12px; }
+    .game-arrow { font-size: 12px; color: var(--grey); transition: transform 0.15s; }
+    .game-content { display: none; padding: 4px 0 32px; }
+    .game-content.open { display: block; }
+    .game-content.open .game-arrow { transform: rotate(90deg); }
+
+    /* ===== FORM FIELDS ===== */
+    .field-group { margin-bottom: 14px; }
+    .field-label { display: block; font-size: 13px; color: var(--grey); margin-bottom: 5px; letter-spacing: 0.3px; }
+    .field-input, .field-textarea {
+      width: 100%; padding: 10px 12px; box-sizing: border-box;
+      background: var(--bg-card2); border: 1px solid var(--grey);
+      color: var(--white); font-size: 15px; outline: none;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .field-input:focus, .field-textarea:focus { border-color: var(--yellow); }
+    .field-textarea { resize: none; overflow: hidden; min-height: 52px; }
+
+    /* ===== ENTRY CARDS ===== */
+    .entry-card {
+      background: rgba(255,255,255,0.03);
+      border-left: 3px solid var(--grey);
+      padding: 16px 16px 12px; margin-bottom: 12px;
+    }
+    .entry-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .entry-num { font-size: 11px; color: var(--magenta); letter-spacing: 2px; font-family: var(--font-pixel); }
+    .entry-remove {
+      background: none; border: 1px solid var(--orange);
+      color: var(--orange); font-size: 13px; padding: 3px 10px; cursor: pointer;
+    }
+    .entry-remove:hover { background: var(--orange); color: var(--bg-dark); }
+
+    .add-btn {
+      background: none; border: 2px solid var(--green);
+      color: var(--green); font-size: 15px; font-weight: 600;
+      padding: 9px 18px; cursor: pointer; margin-bottom: 16px;
+    }
+    .add-btn:hover { background: var(--green); color: var(--bg-dark); }
+
+    /* ===== ACTION BAR ===== */
+    .action-bar-3 { display: flex; gap: 10px; margin-top: 24px; }
+    .abt {
+      flex: 1; padding: 12px 8px; font-size: 15px; font-weight: 600;
+      border: 2px solid; background: none; cursor: pointer;
+    }
+    .abt-save  { border-color: var(--yellow); color: var(--yellow); }
+    .abt-save:hover  { background: var(--yellow);  color: var(--bg-dark); }
+    .abt-copy, .abt-dl { border-color: var(--grey); color: var(--grey); opacity: .3; pointer-events: none; }
+    .abt-copy.on { border-color: var(--cyan);  color: var(--cyan);  opacity: 1; pointer-events: auto; }
+    .abt-copy.on:hover { background: var(--cyan);  color: var(--bg-dark); }
+    .abt-dl.on   { border-color: var(--green); color: var(--green); opacity: 1; pointer-events: auto; }
+    .abt-dl.on:hover   { background: var(--green); color: var(--bg-dark); }
+
+    .json-out {
+      display: none; width: 100%; box-sizing: border-box; margin-top: 14px;
+      background: var(--bg-card2); border: 1px solid var(--grey);
+      color: var(--white); font-family: 'Courier New', monospace;
+      font-size: 13px; padding: 12px; resize: none; overflow: hidden; min-height: 80px;
+    }
+    .json-out.visible { display: block; }
+
+    /* ===== MIND-MAP CANVAS ===== */
+    .mm-section-label {
+      font-family: var(--font-pixel); font-size: 7px;
+      color: var(--cyan); letter-spacing: 2px; margin: 18px 0 10px;
+      border-bottom: 1px solid var(--grey); padding-bottom: 6px;
+    }
+    .mm-kw-entry {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg-card2); padding: 8px 10px;
+      border: 1px solid var(--grey); margin-bottom: 6px;
+    }
+    .mm-kw-num { font-family: var(--font-pixel); font-size: 6px; color: var(--grey); min-width: 22px; }
+    .mm-remove-kw {
+      background: none; border: 1px solid var(--orange);
+      color: var(--orange); font-size: 11px; padding: 3px 7px; cursor: pointer;
+    }
+    .mm-row-ctrl {
+      display: flex; align-items: center; gap: 8px; margin-top: 10px;
+      font-size: 14px; color: var(--grey);
+    }
+    .mm-row-btn {
+      background: none; border: 2px solid var(--grey); color: var(--white);
+      width: 28px; height: 28px; font-size: 16px; cursor: pointer; line-height: 1;
+    }
+    .mm-row-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+    .mm-canvas-wrap {
+      display: flex; gap: 16px; margin-top: 12px; overflow-x: auto; align-items: flex-start;
+      max-width: 100%;
+    }
+    .mm-admin-canvas {
+      flex: 1; min-width: 0; position: relative;
+      background: var(--bg-card2); padding: 8px; box-sizing: border-box;
+    }
+    .mm-admin-svg {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%; pointer-events: none; overflow: visible;
+    }
+    .map-row {
+      display: flex; align-items: center; gap: 8px; min-height: 52px;
+      border: 2px solid rgba(255,255,255,0.08); padding: 6px 8px;
+      margin-bottom: 6px; background: rgba(0,0,0,0.25);
+    }
+    .map-row.accepting { border-color: rgba(0,255,245,0.35); }
+    .map-row.drag-over { border-color: var(--cyan); box-shadow: inset 0 0 18px rgba(0,255,245,0.12); }
+    .row-label { font-family: var(--font-pixel); font-size: 6px; color: var(--grey); min-width: 22px; }
+    .row-nodes { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+    .map-node {
+      position: relative; padding: 8px 14px 8px 10px;
+      border: 2px solid var(--cyan); background: var(--bg-card);
+      cursor: pointer; font-size: 13px; user-select: none;
+    }
+    .map-node:hover { border-color: var(--white); }
+    .map-node.selected { border-color: var(--yellow); box-shadow: 0 0 14px rgba(255,230,0,0.5); }
+    .map-node.dragging { opacity: 0.35; }
+    .node-dot {
+      position: absolute; width: 10px; height: 10px; border-radius: 50%;
+      background: var(--cyan); left: 50%; transform: translateX(-50%);
+    }
+    .node-dot--top    { top: -6px; }
+    .node-dot--bottom { bottom: -6px; }
+    .map-node.selected .node-dot { background: var(--yellow); box-shadow: 0 0 8px rgba(255,230,0,0.8); transform: translateX(-50%) scale(1.3); }
+    .node-conn-count {
+      position: absolute; top: -7px; left: -7px; background: var(--yellow);
+      color: var(--bg-dark); font-family: var(--font-pixel); font-size: 5px;
+      width: 14px; height: 14px; display: none; align-items: center;
+      justify-content: center; border-radius: 50%;
+    }
+    .node-conn-count.has-conn { display: flex; }
+    .map-line { stroke: var(--cyan); stroke-width: 2; stroke-dasharray: 6 3; fill: none; opacity: 0.85; }
+    .conn-delete-btn {
+      position: absolute; width: 20px; height: 20px; transform: translate(-50%,-50%);
+      background: var(--orange); border: 2px solid var(--white); color: var(--white);
+      font-size: 9px; cursor: pointer; display: none; align-items: center;
+      justify-content: center; border-radius: 50%; z-index: 10;
+    }
+    .mm-admin-canvas:hover .conn-delete-btn { display: flex; }
+    .conn-delete-btn:hover { background: #ff3333; }
+    .kw-pool-sidebar {
+      width: 140px; flex-shrink: 0; display: flex; flex-direction: column; gap: 6px;
+    }
+    .kw-pool-hdr {
+      font-family: var(--font-pixel); font-size: 7px;
+      color: var(--magenta); letter-spacing: 2px;
+    }
+    .kw-pool {
+      display: flex; flex-direction: column; gap: 6px; min-height: 60px;
+      padding: 10px; background: var(--bg-card2); border: 2px dashed var(--grey);
+    }
+    .kw-pool.drag-over { border-color: var(--magenta); }
+    .kw-chip {
+      padding: 8px 10px; border: 2px solid var(--magenta);
+      background: var(--bg-card2); cursor: grab; font-size: 13px;
+    }
+    .kw-chip:hover { border-color: var(--white); }
+    .kw-chip.dragging { opacity: 0.35; }
+    .pool-empty { font-family: var(--font-pixel); font-size: 6px; color: var(--green); letter-spacing: 1px; }
+
+    /* ===== MATCHING ===== */
+    .mt-set-card {
+      background: rgba(255,255,255,0.03); border-left: 3px solid var(--cyan);
+      padding: 16px; margin-bottom: 16px;
+    }
+    .mt-set-title-row {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    }
+    .mt-set-title-row span { font-size: 11px; color: var(--cyan); font-family: var(--font-pixel); letter-spacing: 1px; }
+    .mt-set-title-row input {
+      flex: 1; padding: 7px 10px; background: var(--bg-card2);
+      border: 1px solid var(--grey); color: var(--white); font-size: 14px;
+    }
+    .mt-del-set-btn {
+      background: none; border: 1px solid var(--orange);
+      color: var(--orange); font-size: 13px; padding: 4px 10px; cursor: pointer;
+    }
+    .mt-del-set-btn:hover { background: var(--orange); color: var(--bg-dark); }
+    .mt-cols { display: flex; gap: 16px; margin-bottom: 14px; max-width: 700px; }
+    .mt-col { flex: 1; min-width: 0; }
+    .mt-col-label { font-size: 11px; color: var(--grey); letter-spacing: 1px; margin-bottom: 8px; font-family: var(--font-pixel); }
+    .mt-kw-row { display: flex; gap: 6px; margin-bottom: 6px; }
+    .mt-kw-row input { flex: 1; padding: 7px 10px; background: var(--bg-card2); border: 1px solid var(--grey); color: var(--white); font-size: 14px; min-width: 0; }
+    .mt-del-btn { background: none; border: 1px solid var(--orange); color: var(--orange); width: 28px; cursor: pointer; font-size: 12px; flex-shrink: 0; }
+    .mt-del-btn:hover { background: var(--orange); color: var(--bg-dark); }
+    .mt-add-item-btn { background: none; border: 1px solid var(--green); color: var(--green); font-size: 18px; padding: 3px 12px; cursor: pointer; }
+    .mt-add-item-btn:hover { background: var(--green); color: var(--bg-dark); }
+    .mt-conn-label { font-size: 12px; color: var(--grey); margin-bottom: 8px; }
+    .mt-arena {
+      position: relative; display: flex; gap: 0; max-width: 600px;
+      background: rgba(0,0,0,0.2); padding: 10px;
+    }
+    .mt-arena-col { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+    .mt-arena-left { align-items: flex-end; }
+    .mt-arena-right { align-items: flex-start; }
+    .mt-arena-mid { width: 40px; flex-shrink: 0; }
+    .mt-arena-item {
+      position: relative; padding: 8px 18px 8px 10px; font-size: 13px;
+      border: 2px solid var(--grey); background: var(--bg-card2);
+      cursor: pointer; max-width: 220px; word-break: break-word;
+    }
+    .mt-arena-left  .mt-arena-item { padding: 8px 20px 8px 10px; }
+    .mt-arena-right .mt-arena-item { padding: 8px 10px 8px 20px; }
+    .mt-arena-item:hover { border-color: var(--white); }
+    .mt-arena-item.pending { border-color: var(--yellow); box-shadow: 0 0 8px rgba(255,230,0,0.4); }
+    .mt-arena-item.connected { border-color: var(--cyan); }
+    .mt-dot {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 10px; height: 10px; background: var(--grey); border-radius: 50%;
+    }
+    .mt-arena-left  .mt-dot { right: -6px; }
+    .mt-arena-right .mt-dot { left: -6px; }
+    .mt-arena-item.pending   .mt-dot { background: var(--yellow); }
+    .mt-arena-item.connected .mt-dot { background: var(--cyan); }
+    .mt-arena-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+    .conn-line { stroke: var(--cyan); stroke-width: 2; stroke-dasharray: 5 3; fill: none; opacity: 0.8; }
+    .conn-del-bg { fill: var(--bg-dark); stroke: var(--orange); stroke-width: 1; }
+    .conn-del { fill: var(--orange); font-size: 10px; text-anchor: middle; dominant-baseline: central; pointer-events: all; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="../../index.html" class="navbar__logo">◈ PIXELVERSE</a>
+    <ul class="navbar__links">
+      <li><a href="../../index.html" title="Home">🏠</a></li>
+    </ul>
+  </nav>
+
+  <main class="admin-page">
+
+    <!-- AUTH -->
+    <div class="auth-section" id="authSection">
+      <div class="auth-title">⚙ ADMIN</div>
+      <div class="auth-form">
+        <input type="password" id="authPw" class="auth-input" placeholder="password" autocomplete="current-password" />
+        <button id="authBtn" class="auth-btn">▶ ENTER</button>
+      </div>
+      <div id="authError" class="auth-error"></div>
+    </div>
+
+    <!-- GAME SECTIONS -->
+    <div class="game-sections" id="gameSections">
+
+      <!-- PROS-CONS -->
+      <div class="game-block">
+        <button class="game-header" onclick="toggleSection('pc')">
+          <span class="game-header-left"><span>🐺</span><span>Đoán Ưu / Nhược</span></span>
+          <span class="game-arrow" id="arrow-pc">▶</span>
+        </button>
+        <div class="game-content" id="content-pc">
+          <div id="pc-list"></div>
+          <button class="add-btn" id="pc-add">＋ ADD TOPIC</button>
+          <div class="action-bar-3">
+            <button class="abt abt-save" id="pc-save">💾 SAVE</button>
+            <button class="abt abt-copy" id="pc-copy">📋 COPY</button>
+            <button class="abt abt-dl"   id="pc-dl">⬇ DOWNLOAD</button>
+          </div>
+          <textarea class="json-out" id="pc-json" readonly></textarea>
+        </div>
+      </div>
+
+      <!-- MIND-MAP -->
+      <div class="game-block">
+        <button class="game-header" onclick="toggleSection('mm')">
+          <span class="game-header-left"><span>🐙</span><span>Sơ đồ Tư Duy</span></span>
+          <span class="game-arrow" id="arrow-mm">▶</span>
+        </button>
+        <div class="game-content" id="content-mm">
+          <div class="mm-section-label">▸ KEYWORDS</div>
+          <div id="mm-kw-list"></div>
+          <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+            <button class="add-btn" style="margin-bottom:0" id="mm-add-kw">＋ ADD KEYWORD</button>
+            <div class="mm-row-ctrl">
+              <span style="font-size:12px;letter-spacing:1px;color:var(--grey)">ROWS:</span>
+              <button class="mm-row-btn" id="mm-row-minus">−</button>
+              <span id="mm-row-count" style="color:var(--white);min-width:18px;text-align:center">3</span>
+              <button class="mm-row-btn" id="mm-row-plus">+</button>
+            </div>
+          </div>
+          <div class="mm-section-label" style="margin-top:24px">▸ DESIGN MAP <small style="color:var(--grey);font-size:10px">drag to rows · click 2 nodes to connect</small></div>
+          <div class="mm-canvas-wrap">
+            <div class="mm-admin-canvas" id="mm-canvas">
+              <svg class="mm-admin-svg" id="mm-svg"></svg>
+            </div>
+            <div class="kw-pool-sidebar">
+              <div class="kw-pool-hdr">▸ UNPLACED</div>
+              <div class="kw-pool" id="mm-pool"></div>
+            </div>
+          </div>
+          <div class="action-bar-3">
+            <button class="abt abt-save" id="mm-save">💾 SAVE</button>
+            <button class="abt abt-copy" id="mm-copy">📋 COPY</button>
+            <button class="abt abt-dl"   id="mm-dl">⬇ DOWNLOAD</button>
+          </div>
+          <textarea class="json-out" id="mm-json" readonly></textarea>
+        </div>
+      </div>
+
+      <!-- MATCHING -->
+      <div class="game-block">
+        <button class="game-header" onclick="toggleSection('mt')">
+          <span class="game-header-left"><span>🐿️</span><span>Nối Từ</span></span>
+          <span class="game-arrow" id="arrow-mt">▶</span>
+        </button>
+        <div class="game-content" id="content-mt">
+          <button class="add-btn" id="mt-add-set">＋ ADD SET</button>
+          <div id="mt-set-list"></div>
+          <div class="action-bar-3">
+            <button class="abt abt-save" id="mt-save">💾 SAVE</button>
+            <button class="abt abt-copy" id="mt-copy">📋 COPY</button>
+            <button class="abt abt-dl"   id="mt-dl">⬇ DOWNLOAD</button>
+          </div>
+          <textarea class="json-out" id="mt-json" readonly></textarea>
+        </div>
+      </div>
+
+      <!-- FILE-NAMING (info only) -->
+      <div class="game-block">
+        <button class="game-header" onclick="toggleSection('fn')">
+          <span class="game-header-left"><span>🐟</span><span>Đặt Tên File</span></span>
+          <span class="game-arrow" id="arrow-fn">▶</span>
+        </button>
+        <div class="game-content" id="content-fn">
+          <p style="color:var(--grey);font-size:15px;line-height:1.7">
+            Cấu trúc vũ trụ được hardcode sẵn trong file <code style="color:var(--cyan)">data/file-naming.js</code>.<br>
+            Mỗi lần chơi hỏi ngẫu nhiên 10 hành tinh — không cần chỉnh nội dung.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // ================================================================
+    //  AUTH
+    // ================================================================
+    const ADMIN_PW = 'admin123';
+
+    function checkAuth() {
+      if (localStorage.getItem('adminLoggedIn') === '1') {
+        showSections();
+      }
+    }
+
+    document.getElementById('authBtn').addEventListener('click', doAuth);
+    document.getElementById('authPw').addEventListener('keydown', e => { if (e.key === 'Enter') doAuth(); });
+
+    function doAuth() {
+      const pw = document.getElementById('authPw').value;
+      if (pw === ADMIN_PW) {
+        localStorage.setItem('adminLoggedIn', '1');
+        showSections();
+      } else {
+        document.getElementById('authError').textContent = '✕ Sai mật khẩu!';
+        document.getElementById('authPw').value = '';
+        document.getElementById('authPw').focus();
+      }
+    }
+
+    function showSections() {
+      document.getElementById('authSection').innerHTML =
+        '<div class="auth-title" style="margin-bottom:0">⚙ ADMIN</div>' +
+        '<div class="auth-ok">✓ Đã đăng nhập</div>';
+      document.getElementById('gameSections').classList.add('visible');
+      initAll();
+    }
+
+    // ================================================================
+    //  ACCORDION
+    // ================================================================
+    let openSec = null;
+    function toggleSection(id) {
+      if (openSec && openSec !== id) {
+        document.getElementById('content-' + openSec).classList.remove('open');
+        document.getElementById('arrow-' + openSec).style.transform = '';
+      }
+      const content = document.getElementById('content-' + id);
+      const arrow   = document.getElementById('arrow-' + id);
+      const isOpen  = content.classList.contains('open');
+      content.classList.toggle('open', !isOpen);
+      arrow.style.transform = isOpen ? '' : 'rotate(90deg)';
+      openSec = isOpen ? null : id;
+    }
+
+    // ================================================================
+    //  HELPERS
+    // ================================================================
+    function escHtml(s) {
+      return (s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    function flashBtn(id, msg, restore) {
+      const btn = document.getElementById(id);
+      const orig = restore || btn.textContent;
+      btn.textContent = msg;
+      setTimeout(() => btn.textContent = orig, 2000);
+    }
+    function autoResize(ta) {
+      ta.style.height = 'auto';
+      ta.style.height = ta.scrollHeight + 'px';
+    }
+    document.addEventListener('input', e => {
+      if (e.target.tagName === 'TEXTAREA' && !e.target.readOnly) autoResize(e.target);
+    });
+    function enableOutput(prefix, json) {
+      const ta = document.getElementById(prefix + '-json');
+      ta.value = json; ta.classList.add('visible');
+      autoResize(ta);
+      document.getElementById(prefix + '-copy').classList.add('on');
+      document.getElementById(prefix + '-dl').classList.add('on');
+    }
+    function resetOutput(prefix) {
+      document.getElementById(prefix + '-json').classList.remove('visible');
+      document.getElementById(prefix + '-copy').classList.remove('on');
+      document.getElementById(prefix + '-dl').classList.remove('on');
+    }
+    function setupOutput(prefix, filename) {
+      document.getElementById(prefix + '-copy').addEventListener('click', () => {
+        const ta = document.getElementById(prefix + '-json');
+        navigator.clipboard?.writeText(ta.value).catch(() => { ta.select(); document.execCommand('copy'); });
+        flashBtn(prefix + '-copy', '✓ COPIED!', '📋 COPY');
+      });
+      document.getElementById(prefix + '-dl').addEventListener('click', () => {
+        const blob = new Blob([document.getElementById(prefix + '-json').value], { type: 'application/json' });
+        const url  = URL.createObjectURL(blob);
+        const a = Object.assign(document.createElement('a'), { href: url, download: filename });
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+        flashBtn(prefix + '-dl', '✓ DOWNLOADED!', '⬇ DOWNLOAD');
+      });
+    }
+
+    function initAll() { initPC(); initMM(); initMT(); }
+
+    // ================================================================
+    //  PROS-CONS
+    // ================================================================
+    let pcData = [];
+
+    async function initPC() {
+      const saved = localStorage.getItem('prosCons');
+      if (saved) { try { pcData = JSON.parse(saved); } catch(e) {} }
+      else {
+        try { const r = await fetch('../../admin/admin_pros_cons.json'); if (r.ok) pcData = await r.json(); } catch(e) {}
+      }
+      renderPC();
+      setupOutput('pc', 'admin_pros_cons.json');
+      document.getElementById('pc-add').addEventListener('click', () => {
+        const id = Date.now();
+        pcData.push({ id, topic: '', passage: '', pro: { id: 'p'+id, text: '' }, con: { id: 'c'+id, text: '' } });
+        renderPC();
+      });
+      document.getElementById('pc-save').addEventListener('click', () => {
+        for (const item of pcData) {
+          if (!item.topic.trim() || !item.pro.text.trim() || !item.con.text.trim()) {
+            flashBtn('pc-save', '⚠ FILL ALL!'); return;
+          }
+        }
+        localStorage.setItem('prosCons', JSON.stringify(pcData));
+        enableOutput('pc', JSON.stringify(pcData, null, 2));
+        flashBtn('pc-save', '✓ SAVED!', '💾 SAVE');
+      });
+    }
+
+    function renderPC() {
+      const list = document.getElementById('pc-list');
+      list.innerHTML = '';
+      resetOutput('pc');
+      pcData.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = 'entry-card';
+        div.innerHTML = `
+          <div class="entry-head">
+            <span class="entry-num">TOPIC ${idx+1}</span>
+            <button class="entry-remove" onclick="pcRemove(${idx})">✕ REMOVE</button>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Tên chủ đề</label>
+            <input class="field-input" data-pc="${idx}" data-f="topic" value="${escHtml(item.topic)}" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Đoạn văn mô tả</label>
+            <textarea class="field-textarea" data-pc="${idx}" data-f="passage">${escHtml(item.passage)}</textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Ưu điểm</label>
+            <input class="field-input" data-pc="${idx}" data-f="pro" value="${escHtml(item.pro.text)}" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Nhược điểm</label>
+            <input class="field-input" data-pc="${idx}" data-f="con" value="${escHtml(item.con.text)}" />
+          </div>`;
+        list.appendChild(div);
+      });
+      list.querySelectorAll('[data-pc]').forEach(el => {
+        el.addEventListener('input', () => {
+          const i = +el.dataset.pc, f = el.dataset.f;
+          if (f === 'topic')   pcData[i].topic = el.value;
+          if (f === 'passage') pcData[i].passage = el.value;
+          if (f === 'pro')     pcData[i].pro.text = el.value;
+          if (f === 'con')     pcData[i].con.text = el.value;
+          if (el.tagName === 'TEXTAREA') autoResize(el);
+        });
+      });
+      list.querySelectorAll('textarea').forEach(ta => autoResize(ta));
+    }
+    function pcRemove(idx) { pcData.splice(idx, 1); renderPC(); }
+
+    // ================================================================
+    //  MIND-MAP
+    // ================================================================
+    let mmData = null;
+    let mmPlacements    = {};
+    let mmConnections   = new Set();
+    let mmDragKid       = null;
+    let mmSelectedNode  = null;
+    const MM_SEP = '|';
+    function mmCk(a, b)  { return a < b ? `${a}${MM_SEP}${b}` : `${b}${MM_SEP}${a}`; }
+    function mmPair(k)   { return k.split(MM_SEP); }
+
+    async function initMM() {
+      const saved = localStorage.getItem('mindMap');
+      if (saved) { try { mmData = JSON.parse(saved)[0]; } catch(e) {} }
+      if (!mmData) {
+        try { const r = await fetch('../../admin/admin_mind_map.json'); if (r.ok) mmData = (await r.json())[0]; } catch(e) {}
+      }
+      if (!mmData) mmData = { id: Date.now(), title: 'Sơ đồ 1', rowCount: 3, keywords: [], connections: [] };
+      mmPlacements = {};
+      mmData.keywords.forEach(kw => {
+        if (kw.correctRow != null) mmPlacements[kw.id] = kw.correctRow;
+      });
+      mmConnections = new Set(mmData.connections.map(c => mmCk(c.from, c.to)));
+      document.getElementById('mm-row-count').textContent = mmData.rowCount;
+      mmRenderKwList();
+      mmRenderCanvas();
+      setupOutput('mm', 'admin_mind_map.json');
+
+      document.getElementById('mm-add-kw').addEventListener('click', () => {
+        mmData.keywords.push({ id: 'k' + Date.now(), text: '', correctRow: null });
+        mmRenderKwList(); mmRenderPool();
+        const inputs = document.querySelectorAll('#mm-kw-list .field-input');
+        if (inputs.length) inputs[inputs.length - 1].focus();
+      });
+      document.getElementById('mm-row-minus').addEventListener('click', () => mmChangeRows(-1));
+      document.getElementById('mm-row-plus').addEventListener('click',  () => mmChangeRows(1));
+      document.getElementById('mm-canvas').addEventListener('click', () => mmClearSel());
+      document.getElementById('mm-save').addEventListener('click', () => {
+        if (mmData.keywords.some(kw => !kw.text.trim())) {
+          flashBtn('mm-save', '⚠ EMPTY KEYWORDS!'); return;
+        }
+        const saved = mmBuildSave();
+        localStorage.setItem('mindMap', JSON.stringify([saved]));
+        enableOutput('mm', JSON.stringify([saved], null, 2));
+        flashBtn('mm-save', '✓ SAVED!', '💾 SAVE');
+      });
+      window.addEventListener('resize', () => mmRefreshConn());
+    }
+
+    function mmChangeRows(delta) {
+      const next = mmData.rowCount + delta;
+      if (next < 1 || next > 6) return;
+      if (delta < 0) {
+        const removed = mmData.rowCount - 1;
+        Object.keys(mmPlacements).forEach(kid => { if (mmPlacements[kid] === removed) delete mmPlacements[kid]; });
+        mmConnections.forEach(key => {
+          const [a, b] = mmPair(key);
+          if (mmPlacements[a] === undefined || mmPlacements[b] === undefined) mmConnections.delete(key);
+        });
+      }
+      mmData.rowCount = next;
+      document.getElementById('mm-row-count').textContent = next;
+      mmRenderCanvas();
+    }
+
+    function mmRenderKwList() {
+      const list = document.getElementById('mm-kw-list');
+      list.innerHTML = '';
+      mmData.keywords.forEach((kw, idx) => {
+        const div = document.createElement('div');
+        div.className = 'mm-kw-entry';
+        div.innerHTML = `
+          <span class="mm-kw-num">${String(idx+1).padStart(2,'0')}</span>
+          <input class="field-input" style="flex:1" value="${escHtml(kw.text)}" />
+          <button class="mm-remove-kw">✕</button>`;
+        const inp = div.querySelector('.field-input');
+        inp.addEventListener('input', () => {
+          mmData.keywords[idx].text = inp.value;
+          const nTxt = document.querySelector(`#mm-canvas .map-node[data-kid="${kw.id}"] span:not(.node-conn-count)`);
+          if (nTxt) nTxt.textContent = inp.value;
+        });
+        div.querySelector('.mm-remove-kw').addEventListener('click', () => {
+          const kid = kw.id;
+          mmData.keywords.splice(idx, 1);
+          delete mmPlacements[kid];
+          mmConnections.forEach(k => { const [a,b] = mmPair(k); if (a===kid||b===kid) mmConnections.delete(k); });
+          mmRenderKwList(); mmRenderCanvas();
+        });
+        list.appendChild(div);
+      });
+    }
+
+    function mmRenderCanvas() {
+      const canvas = document.getElementById('mm-canvas');
+      canvas.querySelectorAll('.map-row').forEach(r => r.remove());
+      for (let i = 0; i < mmData.rowCount; i++) canvas.insertBefore(mmMakeRow(i), document.getElementById('mm-svg'));
+
+      const poolEl = document.getElementById('mm-pool');
+      const newPool = poolEl.cloneNode(false);
+      poolEl.replaceWith(newPool);
+      newPool.addEventListener('dragover', e => { if (mmDragKid) e.preventDefault(); });
+      newPool.addEventListener('drop', e => {
+        e.preventDefault();
+        if (!mmDragKid) return;
+        const kid = mmDragKid;
+        mmConnections.forEach(k => { const [a,b] = mmPair(k); if (a===kid||b===kid) mmConnections.delete(k); });
+        delete mmPlacements[kid];
+        mmDragKid = null;
+        mmRenderPool(); mmRenderPlaced(); mmRefreshConn();
+      });
+      mmRenderPool(); mmRenderPlaced(); mmRefreshConn();
+    }
+
+    function mmMakeRow(idx) {
+      const row = document.createElement('div');
+      row.className = 'map-row'; row.dataset.row = idx; row.id = `mm-row-${idx}`;
+      const lbl = document.createElement('span'); lbl.className = 'row-label'; lbl.textContent = String(idx+1).padStart(2,'0');
+      const nodes = document.createElement('div'); nodes.className = 'row-nodes'; nodes.id = `mm-nodes-${idx}`;
+      row.appendChild(lbl); row.appendChild(nodes);
+      row.addEventListener('dragover', e => { if (mmDragKid) { e.preventDefault(); row.classList.add('drag-over'); } });
+      row.addEventListener('dragleave', e => { if (!row.contains(e.relatedTarget)) row.classList.remove('drag-over'); });
+      row.addEventListener('drop', e => {
+        e.preventDefault(); row.classList.remove('drag-over');
+        if (!mmDragKid) return;
+        mmPlacements[mmDragKid] = idx;
+        mmConnections.forEach(k => {
+          const [a,b] = mmPair(k);
+          if (mmPlacements[a]!==undefined && mmPlacements[b]!==undefined && mmPlacements[a]===mmPlacements[b]) mmConnections.delete(k);
+        });
+        mmDragKid = null;
+        mmRenderPool(); mmRenderPlaced(); mmRefreshConn();
+      });
+      return row;
+    }
+
+    function mmRenderPool() {
+      const pool = document.getElementById('mm-pool');
+      pool.innerHTML = '';
+      const placed = new Set(Object.keys(mmPlacements));
+      mmData.keywords.forEach(kw => { if (!placed.has(kw.id)) pool.appendChild(mmMakeChip(kw)); });
+      if (mmData.keywords.length > 0 && placed.size === mmData.keywords.length) {
+        const e = document.createElement('div'); e.className = 'pool-empty'; e.textContent = 'ALL PLACED!'; pool.appendChild(e);
+      }
+    }
+
+    function mmRenderPlaced() {
+      for (let i = 0; i < mmData.rowCount; i++) {
+        const c = document.getElementById(`mm-nodes-${i}`); if (c) c.innerHTML = '';
+      }
+      mmData.keywords.forEach(kw => {
+        const row = mmPlacements[kw.id]; if (row === undefined) return;
+        const c = document.getElementById(`mm-nodes-${row}`); if (c) c.appendChild(mmMakeNode(kw));
+      });
+    }
+
+    function mmMakeChip(kw) {
+      const div = document.createElement('div');
+      div.className = 'kw-chip'; div.textContent = kw.text; div.draggable = true; div.dataset.kid = kw.id;
+      div.addEventListener('dragstart', e => {
+        mmDragKid = kw.id; div.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move';
+        document.querySelectorAll('#mm-canvas .map-row').forEach(r => r.classList.add('accepting'));
+      });
+      div.addEventListener('dragend', () => {
+        div.classList.remove('dragging');
+        document.querySelectorAll('#mm-canvas .map-row').forEach(r => r.classList.remove('accepting','drag-over'));
+        mmDragKid = null;
+      });
+      return div;
+    }
+
+    function mmMakeNode(kw) {
+      const div = document.createElement('div');
+      div.className = 'map-node'; div.dataset.kid = kw.id; div.draggable = true;
+      div.innerHTML = `<div class="node-dot node-dot--top"></div><span class="node-conn-count"></span><span>${escHtml(kw.text)}</span><div class="node-dot node-dot--bottom"></div>`;
+      div.addEventListener('click', e => { e.stopPropagation(); mmNodeClick(kw.id); });
+      div.addEventListener('dragstart', e => {
+        e.stopPropagation(); mmDragKid = kw.id; div.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move';
+        document.querySelectorAll('#mm-canvas .map-row').forEach(r => r.classList.add('accepting'));
+      });
+      div.addEventListener('dragend', () => {
+        div.classList.remove('dragging');
+        document.querySelectorAll('#mm-canvas .map-row').forEach(r => r.classList.remove('accepting','drag-over'));
+        mmDragKid = null;
+      });
+      return div;
+    }
+
+    function mmNodeClick(kid) {
+      if (mmSelectedNode === null) {
+        mmSelectedNode = kid;
+        document.querySelectorAll('#mm-canvas .map-node').forEach(n => n.classList.remove('selected'));
+        document.querySelector(`#mm-canvas .map-node[data-kid="${kid}"]`)?.classList.add('selected');
+      } else if (mmSelectedNode === kid) {
+        mmClearSel();
+      } else {
+        const rowA = mmPlacements[mmSelectedNode], rowB = mmPlacements[kid];
+        if (rowA === undefined || rowB === undefined) { mmClearSel(); return; }
+        if (rowA !== rowB) {
+          const key = mmCk(mmSelectedNode, kid);
+          if (mmConnections.has(key)) mmConnections.delete(key); else mmConnections.add(key);
+          mmRefreshConn();
+        }
+        mmClearSel();
+      }
+    }
+
+    function mmClearSel() {
+      mmSelectedNode = null;
+      document.querySelectorAll('#mm-canvas .map-node').forEach(n => n.classList.remove('selected'));
+    }
+
+    function mmGetDotPos(kid, dotType) {
+      const canvas = document.getElementById('mm-canvas');
+      const svg    = document.getElementById('mm-svg');
+      const nodeEl = canvas.querySelector(`.map-node[data-kid="${kid}"]`);
+      if (!nodeEl) return null;
+      const dotEl  = nodeEl.querySelector(`.node-dot--${dotType}`); if (!dotEl) return null;
+      const sr = svg.getBoundingClientRect(), dr = dotEl.getBoundingClientRect();
+      return { x: dr.left + dr.width/2 - sr.left, y: dr.top + dr.height/2 - sr.top };
+    }
+
+    function mmRefreshConn() {
+      const canvas = document.getElementById('mm-canvas');
+      const svg    = document.getElementById('mm-svg');
+      svg.innerHTML = '';
+      canvas.querySelectorAll('.conn-delete-btn').forEach(b => b.remove());
+      const ns = 'http://www.w3.org/2000/svg';
+      mmConnections.forEach(key => {
+        const [kA, kB] = mmPair(key);
+        const rowA = mmPlacements[kA], rowB = mmPlacements[kB];
+        if (rowA === undefined || rowB === undefined) return;
+        const upper = rowA <= rowB ? kA : kB, lower = rowA <= rowB ? kB : kA;
+        const p1 = mmGetDotPos(upper, 'bottom'), p2 = mmGetDotPos(lower, 'top');
+        if (!p1 || !p2) return;
+        const line = document.createElementNS(ns, 'line');
+        line.setAttribute('x1',p1.x); line.setAttribute('y1',p1.y);
+        line.setAttribute('x2',p2.x); line.setAttribute('y2',p2.y);
+        line.setAttribute('class','map-line');
+        svg.appendChild(line);
+        const btn = document.createElement('button');
+        btn.className = 'conn-delete-btn'; btn.textContent = '✕';
+        btn.style.left = ((p1.x+p2.x)/2) + 'px'; btn.style.top = ((p1.y+p2.y)/2) + 'px';
+        btn.addEventListener('click', e => { e.stopPropagation(); mmConnections.delete(key); mmRefreshConn(); });
+        canvas.appendChild(btn);
+      });
+      // update conn count badges
+      const counts = {};
+      mmConnections.forEach(k => { const [a,b]=mmPair(k); counts[a]=(counts[a]||0)+1; counts[b]=(counts[b]||0)+1; });
+      canvas.querySelectorAll('.map-node').forEach(n => {
+        const badge = n.querySelector('.node-conn-count');
+        const cnt = counts[n.dataset.kid] || 0;
+        if (badge) { badge.textContent = cnt; badge.classList.toggle('has-conn', cnt > 0); }
+      });
+    }
+
+    function mmBuildSave() {
+      return {
+        ...mmData,
+        keywords: mmData.keywords.map(kw => ({ ...kw, correctRow: mmPlacements[kw.id] !== undefined ? mmPlacements[kw.id] : null })),
+        connections: [...mmConnections].map(key => { const [from, to] = mmPair(key); return { from, to }; })
+      };
+    }
+
+    // ================================================================
+    //  MATCHING
+    // ================================================================
+    let mtData    = [];
+    let mtConns   = {};
+    let mtPending = null;
+
+    function mtCk(a, b) { return a < b ? `${a}|${b}` : `${b}|${a}`; }
+
+    async function initMT() {
+      const saved = localStorage.getItem('matching');
+      if (saved) { try { mtData = JSON.parse(saved); } catch(e) {} }
+      if (!mtData.length) {
+        try { const r = await fetch('../../admin/admin_matching.json'); if (r.ok) mtData = await r.json(); } catch(e) {}
+      }
+      mtData.forEach((s, si) => { mtConns[si] = new Set(s.connections.map(c => mtCk(c.from, c.to))); });
+      mtBuildUI();
+      setupOutput('mt', 'admin_matching.json');
+      document.getElementById('mt-add-set').addEventListener('click', () => {
+        const si = mtData.length, id = Date.now();
+        mtData.push({ id, title: `Bộ ${si+1}`, leftItems: [{ id:`L${id}a`, text:'' }], rightItems: [{ id:`R${id}b`, text:'' }], connections: [] });
+        mtConns[si] = new Set();
+        mtBuildUI();
+      });
+      document.getElementById('mt-save').addEventListener('click', () => {
+        mtData.forEach((set, si) => {
+          const conns = mtConns[si] || new Set();
+          set.connections = [...conns].map(key => {
+            const [a, b] = key.split('|');
+            return set.leftItems.some(it => it.id === a) ? { from: a, to: b } : { from: b, to: a };
+          });
+        });
+        localStorage.setItem('matching', JSON.stringify(mtData));
+        enableOutput('mt', JSON.stringify(mtData, null, 2));
+        flashBtn('mt-save', '✓ SAVED!', '💾 SAVE');
+      });
+    }
+
+    function mtBuildUI() {
+      const list = document.getElementById('mt-set-list');
+      list.innerHTML = ''; mtPending = null;
+      resetOutput('mt');
+      mtData.forEach((set, si) => {
+        if (!mtConns[si]) mtConns[si] = new Set(set.connections.map(c => mtCk(c.from, c.to)));
+        const card = document.createElement('div'); card.className = 'mt-set-card';
+
+        // Title row
+        const tr = document.createElement('div'); tr.className = 'mt-set-title-row';
+        tr.innerHTML = `<span>BỘ ${si+1}:</span>`;
+        const ti = document.createElement('input'); ti.value = set.title || '';
+        ti.addEventListener('input', () => { mtData[si].title = ti.value; });
+        const db = document.createElement('button'); db.className = 'mt-del-set-btn'; db.textContent = '✕ XÓA';
+        db.addEventListener('click', () => {
+          mtData.splice(si, 1); mtConns = {};
+          mtData.forEach((s, i) => { mtConns[i] = new Set(s.connections.map(c => mtCk(c.from, c.to))); });
+          mtBuildUI();
+        });
+        tr.appendChild(ti); tr.appendChild(db); card.appendChild(tr);
+
+        // Columns
+        const cols = document.createElement('div'); cols.className = 'mt-cols';
+        ['left','right'].forEach(side => {
+          const col = document.createElement('div'); col.className = 'mt-col';
+          const lbl = document.createElement('div'); lbl.className = 'mt-col-label';
+          lbl.textContent = side === 'left' ? 'CỘT TRÁI' : 'CỘT PHẢI';
+          col.appendChild(lbl);
+          const items = side === 'left' ? set.leftItems : set.rightItems;
+          items.forEach((item, ii) => {
+            const row = document.createElement('div'); row.className = 'mt-kw-row';
+            const inp = document.createElement('input'); inp.value = item.text;
+            inp.addEventListener('input', () => { items[ii].text = inp.value; mtBuildArena(si); });
+            const del = document.createElement('button'); del.className = 'mt-del-btn'; del.textContent = '✕';
+            del.addEventListener('click', () => { items.splice(ii, 1); mtBuildUI(); });
+            row.appendChild(inp); row.appendChild(del); col.appendChild(row);
+          });
+          const add = document.createElement('button'); add.className = 'mt-add-item-btn'; add.textContent = '＋';
+          add.addEventListener('click', () => {
+            const newId = side==='left' ? `L${Date.now()}` : `R${Date.now()}`;
+            items.push({ id: newId, text: '' }); mtBuildUI();
+          });
+          col.appendChild(add); cols.appendChild(col);
+        });
+        card.appendChild(cols);
+
+        // Connection arena
+        const cl = document.createElement('div'); cl.className = 'mt-conn-label'; cl.textContent = 'KẾT NỐI ĐÚNG — bấm để nối / xóa nối:'; card.appendChild(cl);
+        const arena = document.createElement('div'); arena.className = 'mt-arena'; arena.id = `mt-arena-${si}`;
+        const lc = document.createElement('div'); lc.className = 'mt-arena-col mt-arena-left';
+        set.leftItems.forEach(item => { lc.appendChild(mtMakeItem(item, 'left', si)); });
+        const mc = document.createElement('div'); mc.className = 'mt-arena-mid';
+        const rc = document.createElement('div'); rc.className = 'mt-arena-col mt-arena-right';
+        set.rightItems.forEach(item => { rc.appendChild(mtMakeItem(item, 'right', si)); });
+        const sw = document.createElement('div');
+        sw.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;';
+        const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+        svg.id = `mt-svg-${si}`; svg.className = 'mt-arena-svg'; sw.appendChild(svg);
+        arena.appendChild(lc); arena.appendChild(mc); arena.appendChild(rc); arena.appendChild(sw);
+        card.appendChild(arena); list.appendChild(card);
+      });
+      requestAnimationFrame(() => { mtData.forEach((_, si) => mtRenderLines(si)); });
+    }
+
+    function mtMakeItem(item, side, si) {
+      const el = document.createElement('div'); el.className = 'mt-arena-item';
+      el.dataset.mid = item.id; el.dataset.mside = side; el.dataset.msi = si;
+      const dot = document.createElement('div'); dot.className = 'mt-dot';
+      const sp  = document.createElement('span'); sp.textContent = item.text || item.id;
+      if (side === 'left') { el.appendChild(sp); el.appendChild(dot); }
+      else { el.appendChild(dot); el.appendChild(sp); }
+      el.addEventListener('click', e => { e.stopPropagation(); mtItemClick(item.id, side, si); });
+      return el;
+    }
+
+    function mtBuildArena(si) {
+      // Rebuild just the arena SVG lines after text edits
+      requestAnimationFrame(() => mtRenderLines(si));
+    }
+
+    function mtGetDotPos(itemId, si) {
+      const arena = document.getElementById(`mt-arena-${si}`); if (!arena) return null;
+      const dotEl = arena.querySelector(`[data-mid="${itemId}"] .mt-dot`); if (!dotEl) return null;
+      const ar = arena.getBoundingClientRect(), dr = dotEl.getBoundingClientRect();
+      return { x: dr.left + dr.width/2 - ar.left, y: dr.top + dr.height/2 - ar.top };
+    }
+
+    function mtRenderLines(si) {
+      const svg = document.getElementById(`mt-svg-${si}`); if (!svg) return;
+      svg.innerHTML = '';
+      const conns = mtConns[si] || new Set();
+      conns.forEach(key => {
+        const [a, b] = key.split('|');
+        const pA = mtGetDotPos(a, si), pB = mtGetDotPos(b, si); if (!pA || !pB) return;
+        const mx = (pA.x+pB.x)/2, my = (pA.y+pB.y)/2;
+        const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+        line.setAttribute('x1',pA.x); line.setAttribute('y1',pA.y);
+        line.setAttribute('x2',pB.x); line.setAttribute('y2',pB.y);
+        line.setAttribute('class','conn-line'); svg.appendChild(line);
+        const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+        g.style.cssText = 'cursor:pointer;pointer-events:all;';
+        g.addEventListener('click', e => { e.stopPropagation(); mtConns[si].delete(key); mtRenderLines(si); mtUpdateColors(si); });
+        const bg = document.createElementNS('http://www.w3.org/2000/svg','rect');
+        bg.setAttribute('x',mx-7); bg.setAttribute('y',my-7); bg.setAttribute('width',14); bg.setAttribute('height',14); bg.setAttribute('class','conn-del-bg');
+        const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+        txt.setAttribute('x',mx); txt.setAttribute('y',my); txt.setAttribute('class','conn-del'); txt.textContent = '✕';
+        g.appendChild(bg); g.appendChild(txt); svg.appendChild(g);
+      });
+      mtUpdateColors(si);
+    }
+
+    function mtUpdateColors(si) {
+      const conns = mtConns[si] || new Set();
+      document.querySelectorAll(`[data-msi="${si}"]`).forEach(item => {
+        const id = item.dataset.mid;
+        const hasPend = mtPending && +mtPending.si === si && mtPending.id === id;
+        const hasConn = [...conns].some(k => k.split('|').includes(id));
+        item.classList.toggle('pending', hasPend);
+        item.classList.toggle('connected', hasConn && !hasPend);
+      });
+    }
+
+    function mtItemClick(id, side, si) {
+      if (!mtPending) { mtPending = { id, side, si }; mtUpdateColors(si); return; }
+      if (+mtPending.si !== si) {
+        const prev = mtPending.si; mtPending = { id, side, si };
+        mtUpdateColors(prev); mtUpdateColors(si); return;
+      }
+      if (mtPending.id === id) { mtPending = null; mtUpdateColors(si); return; }
+      if (mtPending.side === side) { mtPending = { id, side, si }; mtUpdateColors(si); return; }
+      const leftId  = side === 'right' ? mtPending.id : id;
+      const rightId = side === 'right' ? id : mtPending.id;
+      const key = mtCk(leftId, rightId);
+      if (!mtConns[si]) mtConns[si] = new Set();
+      if (mtConns[si].has(key)) mtConns[si].delete(key); else mtConns[si].add(key);
+      mtPending = null; mtRenderLines(si);
+    }
+
+    // ================================================================
+    //  BOOT
+    // ================================================================
+    checkAuth();
+  </script>
+</body>
+</html>

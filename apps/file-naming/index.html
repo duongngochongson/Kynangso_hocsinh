@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="../../css/style.css" />
   <script src="../../data/file-naming.js"></script>
   <script src="../../js/sfx.js"></script>
-  <script src="../../js/admin-auth.js"></script>
   <style>
     /* ===== 3-PANEL LAYOUT ===== */
     .fn-layout {
@@ -365,50 +364,6 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* ===== ADMIN ===== */
-    .admin-panel {
-      position: fixed;
-      inset: 0;
-      z-index: 500;
-      display: none;
-      overflow-y: auto;
-      background: var(--bg-dark);
-    }
-    .admin-panel.open { display: flex; align-items: center; justify-content: center; }
-    .admin-panel__inner {
-      max-width: 520px;
-      width: 100%;
-      padding: 28px 24px 40px;
-      position: relative;
-      text-align: center;
-    }
-    .admin-panel__title {
-      font-size: 10px;
-      color: var(--yellow);
-      letter-spacing: 2px;
-      margin-bottom: 20px;
-    }
-    .admin-panel__close {
-      position: absolute;
-      top: 28px; right: 24px;
-      background: transparent;
-      border: 2px solid var(--yellow);
-      color: var(--yellow);
-      font-family: var(--font-pixel);
-      font-size: 8px;
-      padding: 4px 10px;
-      cursor: pointer;
-    }
-    .admin-random-msg {
-      font-size: 11px;
-      color: var(--grey);
-      letter-spacing: 1px;
-      line-height: 1.8;
-      border: 2px solid rgba(255,255,255,0.1);
-      padding: 20px;
-    }
-    .admin-random-msg strong { color: var(--yellow); display: block; margin-bottom: 8px; }
-
     /* ===== RESPONSIVE ===== */
     @media (max-width: 600px) {
       .fn-layout { grid-template-columns: 160px 1fr; }
@@ -416,11 +371,6 @@
       .fn-grid-icon { font-size: 22px; }
       .fn-answer-bar { gap: 8px; padding: 8px 10px; }
     }
-    /* Admin panel: Montserrat, min 15px */
-    .admin-panel, .admin-panel * { font-family: 'Montserrat', sans-serif !important; }
-    .admin-panel input, .admin-panel textarea, .admin-panel select,
-    .admin-panel label, .admin-panel p, .admin-panel div, .admin-panel span,
-    .admin-panel button { font-size: 15px; }
   </style>
 </head>
 <body>
@@ -438,7 +388,7 @@
           </span>
         </button>
       </li>
-      <li><button class="navbar__admin-btn" id="adminBtn">🔒 ADMIN</button></li>
+      <li><a class="navbar__admin-btn" href="../admin/">⚙ ADMIN</a></li>
     </ul>
   </nav>
 
@@ -449,35 +399,6 @@
       <a href="../mind-map/index.html" class="navbar__game-item">🐙</a>
       <a href="../matching/index.html" class="navbar__game-item">🐿️</a>
       <div class="navbar__game-item navbar__game-item--active">🐟</div>
-    </div>
-  </div>
-
-  <!-- ===== ADMIN LOGIN MODAL ===== -->
-  <div class="admin-modal-overlay hidden" id="adminModal">
-    <div class="admin-modal pixel-box pixel-box--yellow">
-      <div class="admin-modal__title">🔐 ADMIN LOGIN</div>
-      <div>
-        <label class="admin-modal__label" for="adminPw">PASSWORD</label>
-        <input class="admin-modal__input" type="password" id="adminPw" placeholder="••••••••" autocomplete="current-password" />
-      </div>
-      <div class="admin-modal__error" id="adminError"></div>
-      <div class="admin-modal__btns">
-        <button class="admin-modal__btn" id="adminLoginBtn">▶ LOGIN</button>
-        <button class="admin-modal__btn admin-modal__btn--cancel" id="adminCancelBtn">✕ CANCEL</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== ADMIN PANEL ===== -->
-  <div class="admin-panel" id="adminPanel">
-    <div class="admin-panel__inner">
-      <div class="admin-panel__title" id="adminPanelTitle">⚙ ADMIN — 🐟 ĐẶT TÊN FILE</div>
-      <button class="admin-panel__close" id="adminClose">✕ CLOSE</button>
-      <div class="admin-random-msg">
-        <strong>⚙ Trò này ngẫu nhiên</strong>
-        Cấu trúc vũ trụ cố định. Mỗi lần chơi sẽ hỏi 10 hành tinh ngẫu nhiên.<br><br>
-        Không cần chỉnh nội dung.
-      </div>
     </div>
   </div>
 
@@ -1012,14 +933,6 @@
     document.addEventListener('click', () => gamesPopup.classList.remove('open'));
 
     // ================================================================
-    //  ADMIN AUTH
-    // ================================================================
-    const adminPanel = document.getElementById('adminPanel');
-    function openAdminPanel() { adminPanel.classList.add('open'); }
-    document.getElementById('adminClose').addEventListener('click', () => adminPanel.classList.remove('open'));
-    initAdminAuth({ onLogin: openAdminPanel });
-
-    // ================================================================
     //  EVENT LISTENERS
     // ================================================================
     document.getElementById('fnCheckBtn').addEventListener('click', checkAnswer);
@@ -1036,8 +949,6 @@
     function initGame() {
       document.title = `${GAME_EMOJI} — PIXELVERSE`;
       document.getElementById('gameTitle').textContent = `${GAME_EMOJI} Đặt Tên File`;
-      document.getElementById('adminPanelTitle').textContent = `⚙ ADMIN — ${GAME_EMOJI} ĐẶT TÊN FILE`;
-
       tree = buildTree();
       collectPlanets(tree);
       generateQuestions();
@@ -1047,9 +958,6 @@
       buildDots();
       goToQ(0);
 
-      if (new URLSearchParams(location.search).get('admin') === 'open' && isAdminLoggedIn()) {
-        openAdminPanel();
-      }
     }
 
     initGame();

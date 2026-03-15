@@ -7,7 +7,6 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%2300fff5'>◈</text></svg>">
   <link rel="stylesheet" href="css/style.css" />
   <script src="js/sfx.js"></script>
-  <script src="js/admin-auth.js"></script>
   <style>
     /* ===== HOME-SPECIFIC STYLES ===== */
 
@@ -127,154 +126,6 @@
       letter-spacing: 0;
     }
 
-    /* ===== ADMIN SETTINGS PANEL ===== */
-    .admin-settings-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 500;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(5,5,15,0.88);
-      backdrop-filter: blur(4px);
-    }
-    .admin-settings-overlay.hidden { display: none; }
-
-    .admin-settings-inner {
-      background: var(--bg-card);
-      border: 3px solid var(--yellow);
-      box-shadow: 0 0 40px rgba(255,230,0,0.3);
-      max-width: 560px;
-      width: calc(100% - 2rem);
-      padding: 32px 28px;
-      margin: 1rem;
-    }
-    .admin-settings-title {
-      font-family: var(--font-pixel);
-      font-size: 11px;
-      color: var(--yellow);
-      text-shadow: 0 0 10px var(--yellow);
-      letter-spacing: 2px;
-      margin-bottom: 6px;
-    }
-    .admin-settings-sub {
-      font-family: var(--font-vi-body);
-      font-size: 13px;
-      color: rgba(232,232,255,0.55);
-      margin-bottom: 20px;
-    }
-    .admin-game-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .admin-game-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--bg-card2);
-      border: 1px solid var(--grey);
-      padding: 12px 14px;
-    }
-    .admin-game-item--soon { opacity: 0.4; pointer-events: none; }
-    .admin-game-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .admin-game-icon { font-size: 20px; }
-    .admin-game-name {
-      font-family: var(--font-vi-heading);
-      font-size: 15px;
-      color: var(--white);
-    }
-    .admin-game-tag {
-      font-family: var(--font-pixel);
-      font-size: 6px;
-      color: var(--grey);
-      letter-spacing: 1px;
-    }
-    .admin-game-edit-btn {
-      font-family: var(--font-pixel);
-      font-size: 7px;
-      padding: 7px 12px;
-      border: 2px solid var(--cyan);
-      background: transparent;
-      color: var(--cyan);
-      text-decoration: none;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: all 0.1s steps(1);
-      white-space: nowrap;
-    }
-    .admin-game-edit-btn:hover {
-      background: var(--cyan);
-      color: var(--bg-dark);
-    }
-    .admin-game-soon-tag {
-      font-family: var(--font-pixel);
-      font-size: 7px;
-      padding: 7px 12px;
-      border: 2px solid var(--grey);
-      color: var(--grey);
-      letter-spacing: 1px;
-    }
-    .admin-settings-close {
-      font-family: var(--font-pixel);
-      font-size: 7px;
-      padding: 9px 0;
-      border: 2px solid var(--grey);
-      background: transparent;
-      color: var(--grey);
-      cursor: pointer;
-      letter-spacing: 1px;
-      width: 100%;
-      transition: all 0.1s;
-    }
-    .admin-settings-close:hover { border-color: var(--white); color: var(--white); }
-
-    /* ===== GAME ADMIN IFRAME OVERLAY ===== */
-    .game-admin-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 600;
-      background: var(--bg-dark);
-      display: flex;
-      flex-direction: column;
-    }
-    .game-admin-overlay.hidden { display: none; }
-    .game-admin-back {
-      flex-shrink: 0;
-      font-family: var(--font-pixel);
-      font-size: 8px;
-      padding: 10px 18px;
-      background: var(--bg-card2);
-      border: none;
-      border-bottom: 2px solid var(--grey);
-      color: var(--cyan);
-      cursor: pointer;
-      letter-spacing: 1px;
-      text-align: left;
-      transition: background 0.1s;
-    }
-    .game-admin-back:hover { background: var(--bg-card); color: var(--white); }
-    .game-admin-iframe {
-      flex: 1;
-      border: none;
-      width: 100%;
-    }
-
-    /* ===== ADMIN PANEL FONTS ===== */
-    .admin-settings-inner,
-    .admin-settings-inner * {
-      font-family: 'Montserrat', sans-serif;
-    }
-    .admin-settings-title {
-      font-family: var(--font-pixel) !important;
-    }
-    .admin-game-name { font-size: 15px; }
-    .admin-settings-sub { font-size: 15px; }
   </style>
 </head>
 <body>
@@ -293,7 +144,7 @@
           </span>
         </button>
       </li>
-      <li><button class="navbar__admin-btn" id="adminBtn">🔒 ADMIN</button></li>
+      <li><a class="navbar__admin-btn" href="apps/admin/">⚙ ADMIN</a></li>
     </ul>
   </nav>
 
@@ -307,75 +158,6 @@
     </div>
   </div>
 
-  <!-- ===== ADMIN LOGIN MODAL ===== -->
-  <div class="admin-modal-overlay hidden" id="adminModal">
-    <div class="admin-modal pixel-box pixel-box--yellow">
-      <div class="admin-modal__title">🔐 ADMIN LOGIN</div>
-      <div>
-        <label class="admin-modal__label" for="adminPw">PASSWORD</label>
-        <input class="admin-modal__input" type="password" id="adminPw" placeholder="••••••••" autocomplete="current-password" />
-      </div>
-      <div class="admin-modal__error" id="adminError"></div>
-      <div class="admin-modal__btns">
-        <button class="admin-modal__btn" id="adminLoginBtn">▶ LOGIN</button>
-        <button class="admin-modal__btn admin-modal__btn--cancel" id="adminCancelBtn">✕ CANCEL</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== ADMIN SETTINGS PANEL ===== -->
-  <div class="admin-settings-overlay hidden" id="adminSettingsPanel">
-    <div class="admin-settings-inner">
-      <div class="admin-settings-title">⚙ ADMIN SETTINGS</div>
-
-      <div class="admin-game-list">
-        <div class="admin-game-item">
-          <div class="admin-game-info">
-            <span class="admin-game-icon">🐺</span>
-            <div>
-              <div class="admin-game-name">Đoán Ưu/Nhược</div>
-            </div>
-          </div>
-          <button class="admin-game-edit-btn" onclick="openGameAdmin('apps/pros-cons/index.html?admin=open')">✏ EDIT</button>
-        </div>
-        <div class="admin-game-item">
-          <div class="admin-game-info">
-            <span class="admin-game-icon">🐙</span>
-            <div>
-              <div class="admin-game-name">Sơ đồ Tư Duy</div>
-            </div>
-          </div>
-          <button class="admin-game-edit-btn" onclick="openGameAdmin('apps/mind-map/index.html?admin=open')">✏ EDIT</button>
-        </div>
-        <div class="admin-game-item">
-          <div class="admin-game-info">
-            <span class="admin-game-icon">🐿️</span>
-            <div>
-              <div class="admin-game-name">Nối Từ</div>
-            </div>
-          </div>
-          <button class="admin-game-edit-btn" onclick="openGameAdmin('apps/matching/index.html?admin=open')">✏ EDIT</button>
-        </div>
-        <div class="admin-game-item">
-          <div class="admin-game-info">
-            <span class="admin-game-icon">🐟</span>
-            <div>
-              <div class="admin-game-name">Đặt Tên File</div>
-            </div>
-          </div>
-          <button class="admin-game-edit-btn" onclick="openGameAdmin('apps/file-naming/index.html?admin=open')">✏ EDIT</button>
-        </div>
-      </div>
-
-      <button class="admin-settings-close" id="adminSettingsClose">✕ CLOSE</button>
-    </div>
-  </div>
-
-  <!-- ===== GAME ADMIN IFRAME OVERLAY ===== -->
-  <div class="game-admin-overlay hidden" id="gameAdminOverlay">
-    <button class="game-admin-back" id="gameAdminBack">◀ BACK</button>
-    <iframe class="game-admin-iframe" id="gameAdminIframe" src="about:blank"></iframe>
-  </div>
 
   <!-- ===== HERO ===== -->
   <section class="hero">
@@ -477,30 +259,6 @@
     // ===== GAME COUNTER =====
     document.getElementById('gameCount').textContent =
       document.querySelectorAll('.app-card').length + '+';
-
-    // ===== ADMIN LOGIN =====
-    const adminSettingsPanel = document.getElementById('adminSettingsPanel');
-    const adminSettingsClose = document.getElementById('adminSettingsClose');
-
-    initAdminAuth({
-      onLogin() { adminSettingsPanel.classList.remove('hidden'); }
-    });
-    adminSettingsClose.addEventListener('click', () => adminSettingsPanel.classList.add('hidden'));
-
-    // ===== GAME ADMIN IFRAME OVERLAY =====
-    const gameAdminOverlay = document.getElementById('gameAdminOverlay');
-    const gameAdminIframe  = document.getElementById('gameAdminIframe');
-    const gameAdminBack    = document.getElementById('gameAdminBack');
-
-    function openGameAdmin(url) {
-      adminSettingsPanel.classList.add('hidden');
-      gameAdminIframe.src = url;
-      gameAdminOverlay.classList.remove('hidden');
-    }
-    gameAdminBack.addEventListener('click', () => {
-      gameAdminOverlay.classList.add('hidden');
-      gameAdminIframe.src = 'about:blank';
-    });
 
     // ===== QUOTE ROTATOR =====
     const QUOTES = [

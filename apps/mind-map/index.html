@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="../../css/style.css" />
   <script src="../../data/mind-map.js"></script>
   <script src="../../js/sfx.js"></script>
-  <script src="../../js/admin-auth.js"></script>
   <style>
     /* ===== GAME PAGE ===== */
     .game-page {
@@ -370,152 +369,6 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* ===== ADMIN PANEL ===== */
-    .admin-panel {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 500;
-      overflow-y: auto;
-      background: var(--bg-dark);
-    }
-    .admin-panel.open { display: block; }
-    .admin-panel__inner {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 28px 24px 60px;
-    }
-    .admin-panel__title {
-      font-family: var(--font-vi-heading);
-      font-size: 18px;
-      color: var(--yellow);
-      text-shadow: 0 0 10px var(--yellow);
-      letter-spacing: 2px;
-      margin-bottom: 24px;
-    }
-    .admin-section { margin-bottom: 24px; }
-    .admin-section-title {
-      font-family: var(--font-pixel);
-      font-size: 8px;
-      color: var(--cyan);
-      letter-spacing: 2px;
-      margin-bottom: 10px;
-      border-bottom: 1px solid var(--grey);
-      padding-bottom: 6px;
-    }
-    .admin-kw-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
-    .admin-kw-entry {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--bg-card2);
-      padding: 8px 10px;
-      border: 1px solid var(--grey);
-    }
-    .admin-kw-num {
-      font-family: var(--font-pixel);
-      font-size: 6px;
-      color: var(--grey);
-      min-width: 22px;
-    }
-    .admin-remove-kw {
-      font-family: var(--font-pixel);
-      font-size: 6px;
-      background: transparent;
-      border: 1px solid var(--orange);
-      color: var(--orange);
-      padding: 4px 8px;
-      cursor: pointer;
-    }
-    .admin-remove-kw:hover { background: var(--orange); color: var(--bg-dark); }
-    .admin-row-ctrl { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
-    .admin-row-ctrl-label {
-      font-family: var(--font-pixel);
-      font-size: 7px;
-      color: var(--grey);
-      letter-spacing: 1px;
-    }
-    .admin-row-btn {
-      font-family: var(--font-pixel);
-      font-size: 10px;
-      width: 30px; height: 30px;
-      border: 2px solid var(--cyan);
-      background: transparent;
-      color: var(--cyan);
-      cursor: pointer;
-      transition: all 0.1s steps(1);
-    }
-    .admin-row-btn:hover { background: var(--cyan); color: var(--bg-dark); }
-    #adminRowCountDisplay {
-      font-family: var(--font-pixel);
-      font-size: 11px;
-      color: var(--white);
-      min-width: 20px;
-      text-align: center;
-    }
-    .admin-canvas-layout { grid-template-columns: 1fr 180px; }
-    .admin-map-canvas .map-row { background: rgba(0,0,0,0.15); }
-    .admin-input {
-      font-family: var(--font-vi-body);
-      font-size: 13px;
-      background: var(--bg-card2);
-      border: 2px solid var(--grey);
-      color: var(--white);
-      padding: 7px 10px;
-      outline: none;
-      transition: border-color 0.15s;
-      flex: 1;
-    }
-    .admin-input:focus { border-color: var(--yellow); box-shadow: 0 0 6px rgba(255,230,0,0.25); }
-    .admin-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 8px;
-    }
-    .admin-bar-btn {
-      font-family: var(--font-pixel);
-      font-size: 7px;
-      padding: 9px 14px;
-      border: 2px solid;
-      background: transparent;
-      cursor: pointer;
-      letter-spacing: 1px;
-      transition: all 0.1s steps(1);
-    }
-    .admin-bar-btn--add    { color: var(--green);   border-color: var(--green); }
-    .admin-bar-btn--add:hover    { background: var(--green); color: var(--bg-dark); }
-    .admin-bar-btn--save   { color: var(--cyan);    border-color: var(--cyan); }
-    .admin-bar-btn--save:hover   { background: var(--cyan); color: var(--bg-dark); }
-    .admin-bar-btn--export { color: var(--yellow);  border-color: var(--yellow); }
-    .admin-bar-btn--export:hover { background: var(--yellow); color: var(--bg-dark); }
-    .admin-bar-btn--import { color: var(--magenta); border-color: var(--magenta); }
-    .admin-bar-btn--import:hover { background: var(--magenta); color: var(--bg-dark); }
-    .admin-bar-btn--close  { color: var(--grey); border-color: var(--grey); margin-left: auto; }
-    .admin-bar-btn--close:hover  { color: var(--white); border-color: var(--white); }
-    /* ===== ADMIN ACTION BAR ===== */
-    .admin-action-bar { display: flex; gap: 10px; margin-top: 24px; }
-    .admin-action-btn {
-      flex: 1; padding: 12px 8px;
-      font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 600;
-      border: 2px solid; background: transparent; cursor: pointer; transition: all 0.15s;
-    }
-    .admin-action-btn--save  { border-color: var(--yellow); color: var(--yellow); }
-    .admin-action-btn--save:hover  { background: var(--yellow); color: var(--bg-dark); }
-    .admin-action-btn--copy { border-color: var(--grey); color: var(--grey); opacity: .35; pointer-events: none; }
-    .admin-action-btn--dl   { border-color: var(--grey); color: var(--grey); opacity: .35; pointer-events: none; }
-    .admin-action-btn--copy.enabled { border-color: var(--cyan);  color: var(--cyan);  opacity: 1; pointer-events: auto; }
-    .admin-action-btn--copy.enabled:hover { background: var(--cyan);  color: var(--bg-dark); }
-    .admin-action-btn--dl.enabled   { border-color: var(--green); color: var(--green); opacity: 1; pointer-events: auto; }
-    .admin-action-btn--dl.enabled:hover   { background: var(--green); color: var(--bg-dark); }
-    .admin-json-ta {
-      display: none; width: 100%; margin-top: 14px; box-sizing: border-box;
-      background: var(--bg-card2); border: 1px solid var(--grey);
-      color: var(--white); font-family: 'Courier New', monospace !important;
-      font-size: 13px !important; padding: 12px; height: 180px; resize: vertical;
-    }
-    .admin-json-ta.visible { display: block; }
-
     /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
       .map-layout { grid-template-columns: 1fr; }
@@ -530,11 +383,6 @@
       .action-bar { gap: 8px; }
       .admin-panel__inner { padding: 20px 14px; }
     }
-    /* Admin panel: Montserrat, min 15px */
-    .admin-panel, .admin-panel * { font-family: 'Montserrat', sans-serif !important; }
-    .admin-panel input, .admin-panel textarea, .admin-panel select,
-    .admin-panel label, .admin-panel p, .admin-panel div, .admin-panel span,
-    .admin-panel button { font-size: 15px; }
   </style>
 </head>
 <body>
@@ -553,7 +401,7 @@
           </span>
         </button>
       </li>
-      <li><button class="navbar__admin-btn" id="adminBtn">🔒 ADMIN</button></li>
+      <li><a class="navbar__admin-btn" href="../admin/">⚙ ADMIN</a></li>
     </ul>
   </nav>
 
@@ -564,63 +412,6 @@
       <div class="navbar__game-item navbar__game-item--active" id="navGameName">🐙</div>
       <a href="../matching/index.html" class="navbar__game-item">🐿️</a>
       <a href="../file-naming/index.html" class="navbar__game-item">🐟</a>
-    </div>
-  </div>
-
-  <!-- ===== ADMIN LOGIN MODAL ===== -->
-  <div class="admin-modal-overlay hidden" id="adminModal">
-    <div class="admin-modal pixel-box pixel-box--yellow">
-      <div class="admin-modal__title">🔐 ADMIN LOGIN</div>
-      <div>
-        <label class="admin-modal__label" for="adminPw">PASSWORD</label>
-        <input class="admin-modal__input" type="password" id="adminPw" placeholder="••••••••" autocomplete="current-password" />
-      </div>
-      <div class="admin-modal__error" id="adminError"></div>
-      <div class="admin-modal__btns">
-        <button class="admin-modal__btn" id="adminLoginBtn">▶ LOGIN</button>
-        <button class="admin-modal__btn admin-modal__btn--cancel" id="adminCancelBtn">✕ CANCEL</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== ADMIN PANEL ===== -->
-  <div class="admin-panel" id="adminPanel">
-    <div class="admin-panel__inner">
-      <div class="admin-panel__title" id="adminPanelTitle">⚙ ADMIN — SƠ ĐỒ TƯ DUY</div>
-
-      <div class="admin-section">
-        <div class="admin-section-title">▸ KEYWORDS</div>
-        <div class="admin-kw-list" id="adminKwList"></div>
-        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-          <button class="admin-bar-btn admin-bar-btn--add" id="adminAddKwBtn">+ ADD KEYWORD</button>
-          <div class="admin-row-ctrl">
-            <span class="admin-row-ctrl-label">ROWS:</span>
-            <button class="admin-row-btn" id="adminRowMinus">−</button>
-            <span id="adminRowCountDisplay">3</span>
-            <button class="admin-row-btn" id="adminRowPlus">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="admin-section">
-        <div class="admin-section-title">▸ DESIGN MAP (drag keywords to rows · click 2 nodes to connect/disconnect)</div>
-        <div class="map-layout admin-canvas-layout">
-          <div class="map-canvas admin-map-canvas" id="adminMapCanvas">
-            <svg class="map-svg" id="adminMapSvg"></svg>
-          </div>
-          <div class="kw-pool-section">
-            <div class="kw-pool-header">▸ UNPLACED</div>
-            <div class="kw-pool" id="adminKwPool"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="admin-action-bar">
-        <button class="admin-action-btn admin-action-btn--save" id="adminSaveBtn">💾 SAVE</button>
-        <button class="admin-action-btn admin-action-btn--copy" id="adminCopyBtn">📋 COPY</button>
-        <button class="admin-action-btn admin-action-btn--dl"   id="adminDownloadBtn">⬇ DOWNLOAD</button>
-      </div>
-      <textarea class="admin-json-ta" id="adminJsonTa" readonly></textarea>
     </div>
   </div>
 
@@ -1140,16 +931,8 @@
       else canvas.querySelectorAll('.conn-delete-btn').forEach(b => b.remove());
     }
 
-    function refreshAdminConnections() {
-      const canvas = document.querySelector('.admin-map-canvas');
-      const svg    = document.getElementById('adminMapSvg');
-      drawLines(adminConnections, adminPlacements, canvas, svg, true, null);
-      renderConnectionBtns(adminConnections, adminPlacements, canvas, svg, true);
-    }
-
     window.addEventListener('resize', () => {
       refreshGameConnections();
-      if (document.getElementById('adminPanel').classList.contains('open')) refreshAdminConnections();
     });
 
     // ================================================================
@@ -1286,234 +1069,6 @@
     async function playAgain() { gameData = await loadGameData(); buildGame(); }
 
     // ================================================================
-    //  ADMIN STATE
-    // ================================================================
-    let adminData           = null;
-    let adminPlacements     = {};
-    let adminConnections    = new Set();
-    let adminSelectedNodeId = null;
-    let adminDragKid        = null;
-
-    // ================================================================
-    //  ADMIN: OPEN
-    // ================================================================
-    function openAdminPanel() {
-      adminData = JSON.parse(JSON.stringify(gameData));
-      adminPlacements = {};
-      adminData.keywords.forEach(kw => {
-        if (kw.correctRow !== null && kw.correctRow !== undefined) adminPlacements[kw.id] = kw.correctRow;
-      });
-      adminConnections = new Set(adminData.connections.map(c => ck(c.from, c.to)));
-      document.getElementById('adminRowCountDisplay').textContent = adminData.rowCount;
-      renderAdminKeywordList();
-      renderAdminCanvas();
-      document.getElementById('adminPanel').classList.add('open');
-      document.getElementById('adminJsonTa').classList.remove('visible');
-      document.getElementById('adminCopyBtn').classList.remove('enabled');
-      document.getElementById('adminDownloadBtn').classList.remove('enabled');
-    }
-
-    initAdminAuth({ onLogin: openAdminPanel });
-
-    // Admin canvas: deselect on background click
-    document.getElementById('adminMapCanvas').addEventListener('click', () => clearAdminSelection());
-
-    // ================================================================
-    //  ADMIN: KEYWORD LIST
-    // ================================================================
-    function renderAdminKeywordList() {
-      const list = document.getElementById('adminKwList');
-      list.innerHTML = '';
-      adminData.keywords.forEach((kw, idx) => {
-        const div = document.createElement('div');
-        div.className = 'admin-kw-entry';
-        div.innerHTML = `
-          <span class="admin-kw-num">${String(idx+1).padStart(2,'0')}</span>
-          <input class="admin-input" value="${escHtml(kw.text)}" />
-          <button class="admin-remove-kw">✕</button>
-        `;
-        const input = div.querySelector('input');
-        input.addEventListener('input', () => {
-          adminData.keywords[idx].text = input.value;
-          const nTxt = document.querySelector(`.admin-map-canvas .map-node[data-kid="${kw.id}"] span:not(.node-conn-count)`);
-          if (nTxt) nTxt.textContent = input.value;
-        });
-        div.querySelector('.admin-remove-kw').addEventListener('click', () => {
-          const kid = adminData.keywords[idx].id;
-          adminData.keywords.splice(idx, 1);
-          delete adminPlacements[kid];
-          adminConnections.forEach(key => {
-            const [a, b] = cpair(key); if (a === kid || b === kid) adminConnections.delete(key);
-          });
-          renderAdminKeywordList(); renderAdminCanvas();
-        });
-        list.appendChild(div);
-      });
-    }
-
-    document.getElementById('adminAddKwBtn').addEventListener('click', () => {
-      adminData.keywords.push({ id: 'k' + Date.now(), text: '', correctRow: null });
-      renderAdminKeywordList(); renderAdminPool();
-      const inputs = document.querySelectorAll('#adminKwList .admin-input');
-      if (inputs.length) inputs[inputs.length - 1].focus();
-    });
-
-    document.getElementById('adminRowMinus').addEventListener('click', () => changeAdminRowCount(-1));
-    document.getElementById('adminRowPlus').addEventListener('click',  () => changeAdminRowCount(1));
-
-    function changeAdminRowCount(delta) {
-      const next = adminData.rowCount + delta;
-      if (next < 1 || next > 6) return;
-      if (delta < 0) {
-        const removed = adminData.rowCount - 1;
-        Object.entries(adminPlacements).forEach(([kid, row]) => { if (row === removed) delete adminPlacements[kid]; });
-        adminConnections.forEach(key => {
-          const [a, b] = cpair(key);
-          if (adminPlacements[a] === undefined || adminPlacements[b] === undefined) adminConnections.delete(key);
-        });
-      }
-      adminData.rowCount = next;
-      document.getElementById('adminRowCountDisplay').textContent = next;
-      renderAdminCanvas();
-    }
-
-    // ================================================================
-    //  ADMIN: CANVAS
-    // ================================================================
-    function renderAdminCanvas() {
-      const canvas = document.querySelector('.admin-map-canvas');
-      canvas.querySelectorAll('.map-row').forEach(r => r.remove());
-      for (let i = 0; i < adminData.rowCount; i++) canvas.appendChild(makeRow(i, true));
-
-      // Pool drop (re-wire cleanly each render)
-      const adminPool = document.getElementById('adminKwPool');
-      const newPool = adminPool.cloneNode(false); // clone without listeners
-      adminPool.replaceWith(newPool);
-      newPool.addEventListener('dragover', e => { if (adminDragKid) e.preventDefault(); });
-      newPool.addEventListener('drop', e => {
-        e.preventDefault();
-        if (!adminDragKid) return;
-        const kid = adminDragKid;
-        adminConnections.forEach(key => { const [a, b] = cpair(key); if (a === kid || b === kid) adminConnections.delete(key); });
-        delete adminPlacements[kid];
-        adminDragKid = null;
-        renderAdminPool(); renderAdminPlaced(); refreshAdminConnections();
-      });
-
-      renderAdminPool(); renderAdminPlaced(); refreshAdminConnections();
-    }
-
-    function renderAdminPool() {
-      const pool = document.getElementById('adminKwPool');
-      pool.innerHTML = '';
-      const placed = new Set(Object.keys(adminPlacements));
-      adminData.keywords.forEach(kw => { if (!placed.has(kw.id)) pool.appendChild(makeChip(kw, true)); });
-      if (adminData.keywords.length > 0 && placed.size === adminData.keywords.length) {
-        const e = document.createElement('div'); e.className = 'pool-empty'; e.textContent = 'ALL PLACED!';
-        pool.appendChild(e);
-      }
-    }
-
-    function renderAdminPlaced() {
-      for (let i = 0; i < adminData.rowCount; i++) {
-        const c = document.getElementById(`admin-nodes-${i}`); if (c) c.innerHTML = '';
-      }
-      adminData.keywords.forEach(kw => {
-        const row = adminPlacements[kw.id]; if (row === undefined) return;
-        const c = document.getElementById(`admin-nodes-${row}`);
-        if (c) c.appendChild(makeNode(kw, true));
-      });
-    }
-
-    // ================================================================
-    //  ADMIN: CLICK-TO-CONNECT
-    // ================================================================
-    function handleAdminNodeClick(kid) {
-      if (adminSelectedNodeId === null) {
-        adminSelectedNodeId = kid;
-        document.querySelectorAll('.admin-map-canvas .map-node').forEach(n => n.classList.remove('selected'));
-        document.querySelector(`.admin-map-canvas .map-node[data-kid="${kid}"]`)?.classList.add('selected');
-        SFX.select();
-      } else if (adminSelectedNodeId === kid) {
-        clearAdminSelection();
-      } else {
-        const rowA = adminPlacements[adminSelectedNodeId], rowB = adminPlacements[kid];
-        if (rowA === undefined || rowB === undefined) { clearAdminSelection(); return; }
-        if (rowA === rowB) { SFX.wrong(); }
-        else {
-          const key = ck(adminSelectedNodeId, kid);
-          if (adminConnections.has(key)) adminConnections.delete(key);
-          else { adminConnections.add(key); SFX.place(); }
-          refreshAdminConnections();
-        }
-        clearAdminSelection();
-      }
-    }
-
-    function clearAdminSelection() {
-      adminSelectedNodeId = null;
-      document.querySelectorAll('.admin-map-canvas .map-node').forEach(n => n.classList.remove('selected'));
-    }
-
-    // ================================================================
-    //  ADMIN: SAVE / EXPORT / IMPORT
-    // ================================================================
-    function buildAdminSaveData() {
-      return {
-        ...adminData,
-        keywords: adminData.keywords.map(kw => ({
-          ...kw,
-          correctRow: adminPlacements[kw.id] !== undefined ? adminPlacements[kw.id] : null
-        })),
-        connections: [...adminConnections].map(key => { const [from, to] = cpair(key); return { from, to }; })
-      };
-    }
-
-    document.getElementById('adminSaveBtn').addEventListener('click', () => {
-      if (adminData.keywords.some(kw => !kw.text.trim())) {
-        const btn = document.getElementById('adminSaveBtn');
-        btn.textContent = '⚠ KEYWORDS EMPTY!';
-        setTimeout(() => btn.textContent = '💾 SAVE', 2000);
-        return;
-      }
-      const saved = buildAdminSaveData();
-      localStorage.setItem('mindMap', JSON.stringify([saved]));
-      gameData = JSON.parse(JSON.stringify(saved));
-      const json = JSON.stringify([saved], null, 2);
-      const ta = document.getElementById('adminJsonTa');
-      ta.value = json; ta.classList.add('visible');
-      document.getElementById('adminCopyBtn').classList.add('enabled');
-      document.getElementById('adminDownloadBtn').classList.add('enabled');
-      const btn = document.getElementById('adminSaveBtn');
-      btn.textContent = '✓ SAVED!';
-      setTimeout(() => btn.textContent = '💾 SAVE', 2000);
-    });
-
-    document.getElementById('adminCopyBtn').addEventListener('click', () => {
-      const ta = document.getElementById('adminJsonTa');
-      navigator.clipboard?.writeText(ta.value).catch(() => { ta.select(); document.execCommand('copy'); });
-      const btn = document.getElementById('adminCopyBtn');
-      btn.textContent = '✓ COPIED!';
-      setTimeout(() => btn.textContent = '📋 COPY', 2000);
-    });
-
-    document.getElementById('adminDownloadBtn').addEventListener('click', () => {
-      const json = document.getElementById('adminJsonTa').value;
-      const blob = new Blob([json], { type: 'application/json' });
-      const url  = URL.createObjectURL(blob);
-      const a = Object.assign(document.createElement('a'), { href: url, download: 'admin_mind_map.json' });
-      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-      const btn = document.getElementById('adminDownloadBtn');
-      btn.textContent = '✓ DOWNLOADED!';
-      setTimeout(() => btn.textContent = '⬇ DOWNLOAD', 2000);
-    });
-
-    function setAdminStatus(msg, color) {
-      // retained for internal use (canvas validation, etc.)
-      console.log(`[admin] ${color}: ${msg}`);
-    }
-
-    // ================================================================
     //  INIT
     // ================================================================
     async function initGame() {
@@ -1527,13 +1082,9 @@
       document.title = `${GAME_EMOJI} — PIXELVERSE`;
       document.getElementById('gameTitle').textContent = `${GAME_EMOJI} Sơ đồ Tư Duy`;
       document.getElementById('navGameName').textContent = GAME_EMOJI;
-      document.getElementById('adminPanelTitle').textContent = `⚙ ADMIN — ${GAME_EMOJI} SƠ ĐỒ TƯ DUY`;
 
       buildGame();
 
-      if (new URLSearchParams(location.search).get('admin') === 'open' && isAdminLoggedIn()) {
-        openAdminPanel();
-      }
     }
 
     initGame();
