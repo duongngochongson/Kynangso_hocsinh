@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="../../css/style.css" />
   <script src="../../data/pros-cons.js"></script>
   <script src="../../js/sfx.js"></script>
-  <script src="../../js/admin-auth.js"></script>
   <style>
     /* ===== PAGE LAYOUT ===== */
     .game-page {
@@ -351,223 +350,6 @@
       color: rgba(232,232,255,0.8);
     }
 
-    /* ===== ADMIN SETTINGS PANEL ===== */
-    .admin-panel {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 500;
-      overflow-y: auto;
-      background: var(--bg-dark);
-    }
-    .admin-panel.open { display: block; }
-
-    .admin-panel__inner {
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 28px 24px 60px;
-    }
-
-    .admin-panel__title {
-      font-family: var(--font-vi-heading);
-      font-size: 20px;
-      color: var(--yellow);
-      text-shadow: 0 0 10px var(--yellow);
-      letter-spacing: 2px;
-      margin-bottom: 20px;
-    }
-
-    .admin-topic-entry {
-      background: var(--bg-card2);
-      border: 1px solid var(--grey);
-      padding: 16px;
-      margin-bottom: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      position: relative;
-    }
-    .admin-topic-entry__num {
-      font-family: var(--font-pixel);
-      font-size: 7px;
-      color: var(--magenta);
-      letter-spacing: 2px;
-    }
-
-    .admin-field {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .admin-field label {
-      font-size: 12px;
-      color: var(--grey);
-      letter-spacing: 0.5px;
-    }
-    .admin-input,
-    .admin-textarea {
-      font-family: var(--font-vi-body);
-      font-size: 13px;
-      background: var(--bg-dark);
-      border: 2px solid var(--grey);
-      color: var(--white);
-      padding: 8px 10px;
-      outline: none;
-      transition: border-color 0.15s;
-      width: 100%;
-    }
-    .admin-input:focus, .admin-textarea:focus {
-      border-color: var(--yellow);
-      box-shadow: 0 0 6px rgba(255,230,0,0.25);
-    }
-    .admin-textarea { resize: vertical; min-height: 60px; }
-
-    .admin-remove-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-family: var(--font-pixel);
-      font-size: 7px;
-      background: transparent;
-      border: 1px solid var(--orange);
-      color: var(--orange);
-      padding: 4px 8px;
-      cursor: pointer;
-      transition: all 0.1s;
-    }
-    .admin-remove-btn:hover { background: var(--orange); color: var(--bg-dark); }
-
-    .admin-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 8px;
-    }
-    .admin-bar-btn {
-      font-family: var(--font-pixel);
-      font-size: 7px;
-      padding: 9px 14px;
-      border: 2px solid;
-      background: transparent;
-      cursor: pointer;
-      letter-spacing: 1px;
-      transition: all 0.1s steps(1);
-    }
-    .admin-bar-btn--add    { color: var(--green);   border-color: var(--green); }
-    .admin-bar-btn--add:hover { background: var(--green); color: var(--bg-dark); }
-    .admin-bar-btn--save   { color: var(--cyan);    border-color: var(--cyan); }
-    .admin-bar-btn--save:hover { background: var(--cyan); color: var(--bg-dark); }
-    .admin-bar-btn--export { color: var(--yellow);  border-color: var(--yellow); }
-    .admin-bar-btn--export:hover { background: var(--yellow); color: var(--bg-dark); }
-    .admin-bar-btn--import { color: var(--magenta); border-color: var(--magenta); }
-    .admin-bar-btn--import:hover { background: var(--magenta); color: var(--bg-dark); }
-    .admin-bar-btn--close  { color: var(--grey);    border-color: var(--grey); margin-left: auto; }
-    .admin-bar-btn--close:hover { color: var(--white); border-color: var(--white); }
-
-    .admin-export-box {
-      display: none;
-      margin-top: 16px;
-    }
-    .admin-export-box label {
-      font-family: var(--font-pixel);
-      font-size: 7px;
-      color: var(--yellow);
-      letter-spacing: 1px;
-      display: block;
-      margin-bottom: 6px;
-    }
-    .admin-export-ta {
-      font-family: monospace;
-      font-size: 11px;
-      background: var(--bg-dark);
-      border: 2px solid var(--yellow);
-      color: var(--white);
-      padding: 10px;
-      width: 100%;
-      min-height: 120px;
-      resize: vertical;
-    }
-    .admin-copy-btn {
-      font-family: var(--font-pixel);
-      font-size: 7px;
-      margin-top: 6px;
-      padding: 7px 12px;
-      border: 2px solid var(--yellow);
-      background: transparent;
-      color: var(--yellow);
-      cursor: pointer;
-    }
-    .admin-copy-btn:hover { background: var(--yellow); color: var(--bg-dark); }
-    .admin-copy-btn--download {
-      border-color: var(--cyan);
-      color: var(--cyan);
-    }
-    .admin-copy-btn--download:hover { background: var(--cyan); color: var(--bg-dark); }
-
-    .admin-export-box label strong { color: var(--cyan); }
-
-    .admin-import-box {
-      display: none;
-      margin-top: 16px;
-    }
-    .admin-import-box label {
-      font-family: var(--font-pixel);
-      font-size: 7px;
-      color: var(--magenta);
-      letter-spacing: 1px;
-      display: block;
-      margin-bottom: 6px;
-    }
-    .admin-import-ta {
-      font-family: monospace;
-      font-size: 11px;
-      background: var(--bg-dark);
-      border: 2px solid var(--magenta);
-      color: var(--white);
-      padding: 10px;
-      width: 100%;
-      min-height: 80px;
-      resize: vertical;
-    }
-    .admin-import-apply {
-      font-family: var(--font-pixel);
-      font-size: 7px;
-      margin-top: 6px;
-      padding: 7px 12px;
-      border: 2px solid var(--magenta);
-      background: transparent;
-      color: var(--magenta);
-      cursor: pointer;
-    }
-    .admin-import-apply:hover { background: var(--magenta); color: var(--bg-dark); }
-
-    /* ===== ADMIN ACTION BAR ===== */
-    .admin-action-bar { display: flex; gap: 10px; margin-top: 24px; }
-    .admin-action-btn {
-      flex: 1; padding: 12px 8px;
-      font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 600;
-      border: 2px solid; background: transparent; cursor: pointer; transition: all 0.15s;
-    }
-    .admin-action-btn--save  { border-color: var(--yellow); color: var(--yellow); }
-    .admin-action-btn--save:hover  { background: var(--yellow); color: var(--bg-dark); }
-    .admin-action-btn--copy { border-color: var(--grey); color: var(--grey); opacity: .35; pointer-events: none; }
-    .admin-action-btn--dl   { border-color: var(--grey); color: var(--grey); opacity: .35; pointer-events: none; }
-    .admin-action-btn--copy.enabled { border-color: var(--cyan);  color: var(--cyan);  opacity: 1; pointer-events: auto; }
-    .admin-action-btn--copy.enabled:hover { background: var(--cyan);  color: var(--bg-dark); }
-    .admin-action-btn--dl.enabled   { border-color: var(--green); color: var(--green); opacity: 1; pointer-events: auto; }
-    .admin-action-btn--dl.enabled:hover   { background: var(--green); color: var(--bg-dark); }
-    .admin-json-ta {
-      display: none; width: 100%; margin-top: 14px; box-sizing: border-box;
-      background: var(--bg-card2); border: 1px solid var(--grey);
-      color: var(--white); font-family: 'Courier New', monospace !important;
-      font-size: 13px !important; padding: 12px; height: 180px; resize: vertical;
-    }
-    .admin-json-ta.visible { display: block; }
-    /* Admin panel: Montserrat, min 15px */
-    .admin-panel, .admin-panel * { font-family: 'Montserrat', sans-serif !important; }
-    .admin-panel input, .admin-panel textarea, .admin-panel select,
-    .admin-panel label, .admin-panel p, .admin-panel div, .admin-panel span,
-    .admin-panel button { font-size: 15px; }
   </style>
 </head>
 <body>
@@ -586,7 +368,7 @@
           </span>
         </button>
       </li>
-      <li><button class="navbar__admin-btn" id="adminBtn">🔒 ADMIN</button></li>
+      <li><a class="navbar__admin-btn" href="../admin/">⚙ ADMIN</a></li>
     </ul>
   </nav>
 
@@ -597,42 +379,6 @@
       <a href="../mind-map/index.html" class="navbar__game-item">🐙</a>
       <a href="../matching/index.html" class="navbar__game-item">🐿️</a>
       <a href="../file-naming/index.html" class="navbar__game-item">🐟</a>
-    </div>
-  </div>
-
-  <!-- ===== ADMIN LOGIN MODAL ===== -->
-  <div class="admin-modal-overlay hidden" id="adminModal">
-    <div class="admin-modal pixel-box pixel-box--yellow">
-      <div class="admin-modal__title">🔐 ADMIN LOGIN</div>
-      <div>
-        <label class="admin-modal__label" for="adminPw">PASSWORD</label>
-        <input class="admin-modal__input" type="password" id="adminPw" placeholder="••••••••" autocomplete="current-password" />
-      </div>
-      <div class="admin-modal__error" id="adminError"></div>
-      <div class="admin-modal__btns">
-        <button class="admin-modal__btn" id="adminLoginBtn">▶ LOGIN</button>
-        <button class="admin-modal__btn admin-modal__btn--cancel" id="adminCancelBtn">✕ CANCEL</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== ADMIN SETTINGS PANEL ===== -->
-  <div class="admin-panel" id="adminPanel">
-    <div class="admin-panel__inner">
-      <div class="admin-panel__title">⚙ ADMIN — 🐺 ĐoÁN ƯU/NHƯỢC</div>
-
-      <div id="adminTopicsList"></div>
-
-      <div class="admin-bar">
-        <button class="admin-bar-btn admin-bar-btn--add" id="adminAddBtn">+ ADD TOPIC</button>
-      </div>
-
-      <div class="admin-action-bar">
-        <button class="admin-action-btn admin-action-btn--save" id="adminSaveBtn">💾 SAVE</button>
-        <button class="admin-action-btn admin-action-btn--copy" id="adminCopyBtn">📋 COPY</button>
-        <button class="admin-action-btn admin-action-btn--dl"   id="adminDownloadBtn">⬇ DOWNLOAD</button>
-      </div>
-      <textarea class="admin-json-ta" id="adminJsonTa" readonly></textarea>
     </div>
   </div>
 
@@ -680,8 +426,6 @@
 
   <!-- ===== FOOTER ===== -->
   <script>
-    // SFX and ADMIN_PW loaded from js/sfx.js and js/admin-auth.js
-
     // ================================================================
     //  GAMES POPUP
     // ================================================================
@@ -696,129 +440,6 @@
       }
     });
     document.addEventListener('click', () => gamesPopup.classList.remove('open'));
-
-    // ================================================================
-    //  ADMIN SYSTEM
-    // ================================================================
-    const adminPanel = document.getElementById('adminPanel');
-
-    function isLoggedIn() { return isAdminLoggedIn(); }
-
-    initAdminAuth({ onLogin: openAdminPanel });
-
-    // ---- Admin Panel ----
-    let adminData = [];  // working copy while editing
-
-    function openAdminPanel() {
-      adminData = JSON.parse(JSON.stringify(gameData)); // deep copy
-      renderAdminForm();
-      adminPanel.classList.add('open');
-      document.getElementById('adminJsonTa').classList.remove('visible');
-      document.getElementById('adminCopyBtn').classList.remove('enabled');
-      document.getElementById('adminDownloadBtn').classList.remove('enabled');
-    }
-
-    function renderAdminForm() {
-      const list = document.getElementById('adminTopicsList');
-      list.innerHTML = '';
-      adminData.forEach((item, idx) => {
-        const div = document.createElement('div');
-        div.className = 'admin-topic-entry';
-        div.innerHTML = `
-          <div class="admin-topic-entry__num">TOPIC ${idx + 1}</div>
-          <button class="admin-remove-btn" onclick="adminRemove(${idx})">✕ REMOVE</button>
-          <div class="admin-field">
-            <label>Tên chủ đề</label>
-            <input class="admin-input" data-idx="${idx}" data-field="topic" value="${escHtml(item.topic)}" />
-          </div>
-          <div class="admin-field">
-            <label>Đoạn văn mô tả</label>
-            <textarea class="admin-textarea" data-idx="${idx}" data-field="passage">${escHtml(item.passage)}</textarea>
-          </div>
-          <div class="admin-field">
-            <label>Ưu điểm</label>
-            <input class="admin-input" data-idx="${idx}" data-field="pro" value="${escHtml(item.pro.text)}" />
-          </div>
-          <div class="admin-field">
-            <label>Nhược điểm</label>
-            <input class="admin-input" data-idx="${idx}" data-field="con" value="${escHtml(item.con.text)}" />
-          </div>
-        `;
-        list.appendChild(div);
-      });
-
-      // Live-update adminData on input
-      list.querySelectorAll('[data-field]').forEach(el => {
-        el.addEventListener('input', () => {
-          const idx   = parseInt(el.dataset.idx);
-          const field = el.dataset.field;
-          if (field === 'topic')   adminData[idx].topic = el.value;
-          if (field === 'passage') adminData[idx].passage = el.value;
-          if (field === 'pro')     adminData[idx].pro.text = el.value;
-          if (field === 'con')     adminData[idx].con.text = el.value;
-        });
-      });
-    }
-
-    function adminRemove(idx) {
-      adminData.splice(idx, 1);
-      renderAdminForm();
-    }
-
-    document.getElementById('adminAddBtn').addEventListener('click', () => {
-      const newId = Date.now();
-      adminData.push({
-        id: newId,
-        topic: '',
-        passage: '',
-        pro: { id: 'p' + newId, text: '' },
-        con: { id: 'c' + newId, text: '' }
-      });
-      renderAdminForm();
-      // Scroll to bottom of panel
-      adminPanel.scrollTop = adminPanel.scrollHeight;
-    });
-
-    document.getElementById('adminSaveBtn').addEventListener('click', () => {
-      for (const item of adminData) {
-        if (!item.topic.trim() || !item.pro.text.trim() || !item.con.text.trim()) {
-          const btn = document.getElementById('adminSaveBtn');
-          const orig = btn.textContent;
-          btn.textContent = '⚠ FILL ALL FIELDS!';
-          setTimeout(() => btn.textContent = orig, 2000);
-          return;
-        }
-      }
-      localStorage.setItem('prosCons', JSON.stringify(adminData));
-      gameData = JSON.parse(JSON.stringify(adminData));
-      const json = JSON.stringify(adminData, null, 2);
-      const ta = document.getElementById('adminJsonTa');
-      ta.value = json; ta.classList.add('visible');
-      document.getElementById('adminCopyBtn').classList.add('enabled');
-      document.getElementById('adminDownloadBtn').classList.add('enabled');
-      const btn = document.getElementById('adminSaveBtn');
-      btn.textContent = '✓ SAVED!';
-      setTimeout(() => btn.textContent = '💾 SAVE', 2000);
-    });
-
-    document.getElementById('adminCopyBtn').addEventListener('click', () => {
-      const ta = document.getElementById('adminJsonTa');
-      navigator.clipboard?.writeText(ta.value).catch(() => { ta.select(); document.execCommand('copy'); });
-      const btn = document.getElementById('adminCopyBtn');
-      btn.textContent = '✓ COPIED!';
-      setTimeout(() => btn.textContent = '📋 COPY', 2000);
-    });
-
-    document.getElementById('adminDownloadBtn').addEventListener('click', () => {
-      const json = document.getElementById('adminJsonTa').value;
-      const blob = new Blob([json], { type: 'application/json' });
-      const url  = URL.createObjectURL(blob);
-      const a = Object.assign(document.createElement('a'), { href: url, download: 'admin_pros_cons.json' });
-      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-      const btn = document.getElementById('adminDownloadBtn');
-      btn.textContent = '✓ DOWNLOADED!';
-      setTimeout(() => btn.textContent = '⬇ DOWNLOAD', 2000);
-    });
 
     function escHtml(s) {
       return (s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -1201,10 +822,6 @@
     async function initGame() {
       gameData = await loadGameData();
       buildGame();
-      // Auto-open admin panel if navigated from settings
-      if (new URLSearchParams(location.search).get('admin') === 'open' && isLoggedIn()) {
-        openAdminPanel();
-      }
     }
     initGame();
   </script>
