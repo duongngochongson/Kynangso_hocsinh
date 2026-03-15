@@ -334,6 +334,8 @@
       <a href="../mind-map/" class="navbar__game-item" title="Sơ đồ Tư Duy">🐙</a>
       <a href="../matching/" class="navbar__game-item" title="Nối Từ">🐿️</a>
       <a href="../file-naming/" class="navbar__game-item" title="Đặt Tên File">🐟</a>
+      <a href="../prompt-order/" class="navbar__game-item" title="Sắp xếp Prompt">🐜</a>
+      <a href="../calculator/" class="navbar__game-item" title="Máy Tính">🐬</a>
     </div>
   </div>
 
@@ -436,8 +438,37 @@
         </button>
         <div class="game-content" id="content-fn">
           <p style="color:var(--grey);font-size:15px;line-height:1.7">
-            Cấu trúc vũ trụ được hardcode sẵn trong file <code style="color:var(--cyan)">data/file-naming.js</code>.<br>
-            Mỗi lần chơi hỏi ngẫu nhiên 10 hành tinh — không cần chỉnh nội dung.
+            Cấu trúc vũ trụ được lưu trong phần <code style="color:var(--cyan)">fileNaming</code> của <code style="color:var(--cyan)">data/admin_content.json</code>.<br>
+            Mỗi lần chơi hỏi ngẫu nhiên 10 hành tinh — không cần chỉnh nội dung qua admin.
+          </p>
+        </div>
+      </div>
+
+      <!-- PROMPT-ORDER -->
+      <div class="game-block">
+        <button class="game-header" onclick="toggleSection('po')">
+          <span class="game-header-left"><span>🐜</span><span>Sắp xếp Prompt</span></span>
+          <span class="game-arrow" id="arrow-po">▶</span>
+        </button>
+        <div class="game-content" id="content-po">
+          <div id="po-list"></div>
+          <div class="add-btn-row">
+            <button class="add-btn" id="po-add" title="Thêm câu hỏi">+</button>
+            <span>Thêm câu hỏi</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALCULATOR (info only) -->
+      <div class="game-block">
+        <button class="game-header" onclick="toggleSection('calc')">
+          <span class="game-header-left"><span>🐬</span><span>Máy Tính</span></span>
+          <span class="game-arrow" id="arrow-calc">▶</span>
+        </button>
+        <div class="game-content" id="content-calc">
+          <p style="color:var(--grey);font-size:15px;line-height:1.7">
+            Công cụ tính toán không có nội dung cần chỉnh sửa.<br>
+            Mọi tính năng được hardcode sẵn trong <code style="color:var(--cyan)">apps/calculator/index.html</code>.
           </p>
         </div>
       </div>
@@ -501,6 +532,8 @@
     //  GLOBAL ACTION BAR
     // ================================================================
     let gLastJson = '';
+    let rawFileNaming = {};
+    let poData = [];
 
     function enableGlobal() {
       ['gCopyT','gCopyB'].forEach(id => document.getElementById(id).classList.add('on'));
@@ -525,13 +558,16 @@
 
     function globalSave() {
       const content = {
-        prosCons: pcData,
-        mindMap:  [mmBuildSave()],
-        matching: buildMTData()
+        fileNaming:  rawFileNaming,
+        promptOrder: poData,
+        prosCons:    pcData,
+        mindMap:     [mmBuildSave()],
+        matching:    buildMTData()
       };
-      localStorage.setItem('prosCons', JSON.stringify(content.prosCons));
-      localStorage.setItem('mindMap',  JSON.stringify(content.mindMap));
-      localStorage.setItem('matching', JSON.stringify(content.matching));
+      localStorage.setItem('promptOrder', JSON.stringify(content.promptOrder));
+      localStorage.setItem('prosCons',    JSON.stringify(content.prosCons));
+      localStorage.setItem('mindMap',     JSON.stringify(content.mindMap));
+      localStorage.setItem('matching',    JSON.stringify(content.matching));
       gLastJson = JSON.stringify(content, null, 2);
       enableGlobal();
       flashMsg('✓ Đã lưu!');
@@ -589,7 +625,10 @@
       if (e.target.tagName === 'TEXTAREA' && !e.target.readOnly) autoResize(e.target);
     });
 
-    function initAll() { initPC(); initMM(); initMT(); }
+    function initAll() {
+      fetch('../../data/admin_content.json').then(r => r.ok ? r.json() : null).then(d => { if (d) rawFileNaming = d.fileNaming || {}; }).catch(() => {});
+      initPC(); initMM(); initMT(); initPO();
+    }
 
     // ================================================================
     //  PROS-CONS
@@ -1202,6 +1241,88 @@
       if (!mtConns[si]) mtConns[si] = new Set();
       if (mtConns[si].has(key)) mtConns[si].delete(key); else mtConns[si].add(key);
       mtPending = null; mtRenderLines(si);
+    }
+
+    // ================================================================
+    //  PROMPT-ORDER
+    // ================================================================
+    const PO_TYPE_OPTIONS = ['role','context','task','output','style','reference','other'];
+    const PO_TYPE_LABELS  = { role: 'Vai trò', context: 'Bối cảnh', task: 'Nhiệm vụ', output: 'Đầu ra', style: 'Phong cách', reference: 'Tham khảo', other: 'Khác' };
+
+    async function initPO() {
+      const saved = localStorage.getItem('promptOrder');
+      if (saved) { try { poData = JSON.parse(saved); } catch(e) {} }
+      if (!poData.length) {
+        try { const r = await fetch('../../data/admin_content.json'); if (r.ok) { const d = await r.json(); poData = d.promptOrder || []; } } catch(e) {}
+      }
+      renderPO();
+      document.getElementById('po-add').addEventListener('click', () => {
+        poData.push({ id: Date.now(), parts: [{ type: 'task', text: '' }] });
+        renderPO();
+      });
+    }
+
+    function renderPO() {
+      const list = document.getElementById('po-list');
+      list.innerHTML = '';
+      poData.forEach((q, qi) => {
+        const div = document.createElement('div');
+        div.className = 'entry-card';
+        div.innerHTML = `
+          <div class="entry-head">
+            <span class="entry-num">CÂU ${qi+1}</span>
+            <button class="entry-remove po-del-q" title="Xóa câu">✕</button>
+          </div>
+          <div id="po-parts-${qi}"></div>
+          <div class="add-btn-row" style="margin-top:8px">
+            <button class="add-btn po-add-part" data-qi="${qi}" title="Thêm thành phần">+</button>
+            <span>Thêm thành phần</span>
+          </div>`;
+        div.querySelector('.po-del-q').addEventListener('click', () => { poData.splice(qi, 1); renderPO(); });
+        div.querySelector('.po-add-part').addEventListener('click', () => {
+          poData[qi].parts.push({ type: 'task', text: '' });
+          renderPO();
+        });
+        list.appendChild(div);
+        renderPOParts(qi);
+      });
+    }
+
+    function renderPOParts(qi) {
+      const container = document.getElementById(`po-parts-${qi}`);
+      if (!container) return;
+      container.innerHTML = '';
+      poData[qi].parts.forEach((part, pi) => {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;gap:8px;align-items:flex-start;margin-bottom:8px';
+
+        const sel = document.createElement('select');
+        sel.className = 'field-input';
+        sel.style.cssText = 'width:130px;flex-shrink:0;padding:6px 8px;cursor:pointer';
+        PO_TYPE_OPTIONS.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t; opt.textContent = PO_TYPE_LABELS[t] || t;
+          if (t === part.type) opt.selected = true;
+          sel.appendChild(opt);
+        });
+        sel.addEventListener('change', () => { poData[qi].parts[pi].type = sel.value; });
+
+        const ta = document.createElement('textarea');
+        ta.className = 'field-textarea';
+        ta.style.cssText = 'flex:1;min-height:40px';
+        ta.value = part.text;
+        ta.addEventListener('input', () => { poData[qi].parts[pi].text = ta.value; autoResize(ta); });
+
+        const del = document.createElement('button');
+        del.className = 'entry-remove';
+        del.title = 'Xóa thành phần'; del.textContent = '✕';
+        del.style.cssText = 'flex-shrink:0;margin-top:4px';
+        del.addEventListener('click', () => { poData[qi].parts.splice(pi, 1); renderPO(); });
+
+        row.appendChild(sel); row.appendChild(ta); row.appendChild(del);
+        container.appendChild(row);
+        autoResize(ta);
+      });
     }
 
     // ================================================================
