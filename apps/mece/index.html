@@ -15,13 +15,7 @@
     }
 
     /* ===== PAGE HEADER ===== */
-    .page-header { margin-bottom: 24px; }
-    .page-header__back {
-      font-family: var(--font-pixel);
-      font-size: 8px; color: var(--grey);
-      text-decoration: none; letter-spacing: 1px;
-    }
-    .page-header__back:hover { color: var(--cyan); }
+    .page-header { margin-bottom: 24px; text-align: center; }
     .page-header__title {
       font-family: var(--font-pixel);
       font-size: clamp(14px, 3vw, 20px);
@@ -30,8 +24,8 @@
     }
     .mece-explanation {
       font-family: var(--font-vi-body);
-      font-size: 13px; color: rgba(232,232,255,0.5);
-      line-height: 1.6; max-width: 600px;
+      font-size: 13px; color: rgba(232,232,255,0.75);
+      line-height: 1.6; max-width: 600px; margin: 0 auto;
     }
     .mece-explanation strong { color: var(--orange); }
 
@@ -63,7 +57,6 @@
     .question-card__num {
       font-family: var(--font-pixel);
       font-size: 9px; color: var(--orange);
-      text-shadow: 0 0 6px var(--orange);
       min-width: 28px;
     }
     .question-card__topic {
@@ -142,8 +135,7 @@
       transition: all 0.1s steps(1);
     }
     .action-btn--check { color: var(--green); border-color: var(--green); }
-    .action-btn--check:hover:not(:disabled) { background: var(--green); color: var(--bg-dark); }
-    .action-btn--check:disabled { opacity: 0.3; cursor: default; }
+    .action-btn--check:hover { background: var(--green); color: var(--bg-dark); }
     .action-btn--continue { color: var(--cyan); border-color: var(--cyan); }
     .action-btn--continue:hover { background: var(--cyan); color: var(--bg-dark); }
 
@@ -191,7 +183,7 @@
   <nav class="navbar">
     <a href="../../index.html" class="navbar__logo">◈ PIXELVERSE</a>
     <ul class="navbar__links">
-      <li><a href="../../index.html" title="Home">🏠</a></li>
+      <li><a href="../../index.html" title="Home">◈</a></li>
       <li>
         <button class="navbar__grid-btn" id="gamesBtn" title="Games">
           <span class="navbar__grid-btn__dots">
@@ -220,7 +212,7 @@
   <!-- MAIN -->
   <main class="game-page">
     <div class="page-header">
-      <a href="../../index.html" class="page-header__back">◀ BACK TO HOME</a>
+      <a href="../../index.html" class="page-header__back">◀ HOME</a>
       <h1 class="page-header__title">🦊 MECE</h1>
       <p class="mece-explanation">
         <strong>MECE = Mutually Exclusive, Collectively Exhaustive.</strong><br>
@@ -237,7 +229,7 @@
     <div id="meceEmpty" class="mece-empty" style="display:none">Chưa có câu hỏi nào. Thêm trong Admin.</div>
 
     <div class="action-bar">
-      <button class="action-btn action-btn--check" id="checkBtn" disabled>✓ CHECK</button>
+      <button class="action-btn action-btn--check" id="checkBtn">✓ CHECK</button>
       <button class="action-btn action-btn--continue" id="continueBtn" style="display:none">▶ CONTINUE</button>
     </div>
 
@@ -329,7 +321,6 @@
 
       document.getElementById('meceEmpty').style.display = 'none';
       document.getElementById('checkBtn').style.display = '';
-      document.getElementById('checkBtn').disabled = true;
       document.getElementById('continueBtn').style.display = 'none';
       document.getElementById('resultBanner').style.display = 'none';
 
@@ -405,13 +396,7 @@
         btn.classList.toggle('selected', btn.dataset.answer === answers[qId]);
       });
 
-      updateCheckBtn();
       updateProgress();
-    }
-
-    function updateCheckBtn() {
-      const allAnswered = gameData.every(q => answers[q.id] !== undefined);
-      document.getElementById('checkBtn').disabled = !allAnswered;
     }
 
     function updateProgress() {
@@ -505,7 +490,6 @@
 
       document.getElementById('resultBanner').style.display = 'none';
       document.getElementById('checkBtn').style.display = '';
-      document.getElementById('checkBtn').disabled = false; // all were answered
       document.getElementById('continueBtn').style.display = 'none';
     }
 

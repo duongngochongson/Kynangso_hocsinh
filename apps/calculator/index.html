@@ -37,9 +37,9 @@
     }
     .calc-expr {
       font-size: 11px; letter-spacing: 0.5px;
-      color: var(--grey); min-height: 18px;
+      color: rgba(232,232,255,0.5); min-height: 18px;
       overflow: hidden; text-overflow: ellipsis;
-      white-space: nowrap; direction: rtl;
+      white-space: nowrap; text-align: right;
       margin-bottom: 6px;
     }
     .calc-result {
@@ -89,7 +89,7 @@
   <nav class="navbar">
     <a href="../../index.html" class="navbar__logo">◈ PIXELVERSE</a>
     <ul class="navbar__links">
-      <li><a href="../../index.html" title="Home">🏠</a></li>
+      <li><a href="../../index.html" title="Home">◈</a></li>
       <li>
         <button class="navbar__grid-btn" id="gamesBtn" title="Games">
           <span class="navbar__grid-btn__dots">
@@ -117,6 +117,9 @@
 
   <!-- MAIN -->
   <div class="calc-page">
+    <div style="text-align:center; margin-bottom:20px;">
+      <a href="../../index.html" class="page-header__back">◀ HOME</a>
+    </div>
     <h1 class="calc-title">🐬 CALCULATOR</h1>
     <div class="calc" id="calc">
       <!-- Display -->
@@ -165,15 +168,12 @@
     //  DISPLAY
     // ================================================================
     function updateDisplay() {
-      const exprEl   = document.getElementById('calcExpr');
-      const resultEl = document.getElementById('calcResult');
-      exprEl.textContent = expr || '';
-      if (afterEqual) {
-        // Result already in resultEl (set by compute())
-      } else {
-        resultEl.className = 'calc-result';
-        resultEl.textContent = expr || '0';
+      if (!afterEqual) {
+        document.getElementById('calcExpr').textContent = '';
+        document.getElementById('calcResult').className = 'calc-result';
+        document.getElementById('calcResult').textContent = expr || '0';
       }
+      // afterEqual: resultEl and exprEl already set directly by compute()
     }
 
     function compute() {

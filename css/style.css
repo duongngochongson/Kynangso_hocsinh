@@ -319,10 +319,11 @@ section {
 .app-card--magenta::before{ background: linear-gradient(135deg, rgba(255,0,204,0.08) 0%, transparent 55%); }
 .app-card--yellow::before { background: linear-gradient(135deg, rgba(255,230,0,0.08) 0%, transparent 55%); }
 
-/* Per-color ambient glow at rest */
-.app-card--cyan   { box-shadow: 0 0 18px rgba(0,255,245,0.13); }
-.app-card--magenta{ box-shadow: 0 0 18px rgba(255,0,204,0.13); }
-.app-card--yellow { box-shadow: 0 0 18px rgba(255,230,0,0.13); }
+/* Per-color border + ambient glow at rest */
+.app-card--cyan   { border-color: var(--cyan);    box-shadow: 0 0 18px rgba(0,255,245,0.13); }
+.app-card--magenta{ border-color: var(--magenta); box-shadow: 0 0 18px rgba(255,0,204,0.13); }
+.app-card--yellow { border-color: var(--yellow);  box-shadow: 0 0 18px rgba(255,230,0,0.13); }
+.app-card--green  { border-color: var(--green); }
 
 .app-card:hover {
   transform: translate(-4px, -4px);
@@ -336,7 +337,6 @@ section {
 .app-card__icon {
   font-size: 36px;
   line-height: 1;
-  filter: drop-shadow(0 0 6px currentColor);
 }
 
 .app-card__tag {
@@ -357,7 +357,7 @@ section {
 .app-card__desc {
   font-size: 13px;
   font-family: var(--font-vi-body);
-  color: rgba(232,232,255,0.65);
+  color: rgba(232,232,255,0.82);
   line-height: 1.7;
   flex: 1;
 }
@@ -539,6 +539,36 @@ section {
 .navbar__game-item:hover { transform: scale(1.2); filter: drop-shadow(0 0 6px var(--cyan)); }
 .navbar__game-item--active { transform: scale(1.1); filter: drop-shadow(0 0 4px var(--cyan)); pointer-events: none; }
 .navbar__game-item--soon { opacity: 0.4; pointer-events: none; font-size: 18px; }
+
+/* ===== GAME PAGE HEADER (shared across all game pages) ===== */
+.page-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.page-header__back {
+  display: inline-block;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--cyan);
+  border: 1px solid var(--cyan);
+  padding: 6px 14px;
+  text-decoration: none;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+  transition: all 0.1s steps(1);
+}
+.page-header__back:hover {
+  background: var(--cyan);
+  color: var(--bg-dark);
+  box-shadow: 0 0 12px var(--cyan);
+  text-shadow: none;
+}
+.page-header__sub {
+  font-family: var(--font-vi-body);
+  font-size: 13px;
+  color: rgba(232,232,255,0.75);
+  margin-top: 6px;
+}
 
 /* ===== ADMIN MODAL ===== */
 .admin-modal-overlay {
