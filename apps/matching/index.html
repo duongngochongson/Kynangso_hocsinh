@@ -168,12 +168,15 @@
     /* ===== SET NAVIGATION ===== */
     .set-nav {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 16px;
+      gap: 8px;
       margin-bottom: 20px;
-      font-size: 9px;
-      letter-spacing: 1px;
+    }
+    .set-nav__row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
     .set-nav__btn {
       background: transparent;
@@ -189,20 +192,21 @@
       color: var(--cyan);
     }
     .set-nav__btn:disabled { opacity: 0.3; cursor: default; }
-    .set-nav__label { color: var(--cyan); min-width: 80px; text-align: center; }
-
-    /* ===== ACTION BAR ===== */
-    .action-bar {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin-top: 24px;
+    .set-nav__dots { display: flex; gap: 5px; }
+    .set-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--grey); cursor: pointer; border: none; padding: 0;
+      transition: background 0.15s, box-shadow 0.15s;
     }
+    .set-dot.active   { background: var(--yellow); box-shadow: 0 0 5px var(--yellow); }
+    .set-dot.answered { background: var(--green);  box-shadow: 0 0 4px var(--green); }
+
+    /* ===== ACTION BUTTONS (in set-nav) ===== */
     .action-btn {
       font-family: var(--font-pixel);
       font-size: 8px;
       letter-spacing: 2px;
-      padding: 10px 24px;
+      padding: 8px 18px;
       border: none;
       cursor: pointer;
       transition: all 0.15s steps(2);
@@ -326,9 +330,13 @@
     </div>
 
     <div class="set-nav">
-      <button class="set-nav__btn" id="prevSetBtn" onclick="prevSet()">◀</button>
-      <span class="set-nav__label" id="setLabel">BỘ 1</span>
-      <button class="set-nav__btn" id="nextSetBtn" onclick="nextSet()">▶</button>
+      <div class="set-nav__row">
+        <button class="set-nav__btn" id="prevSetBtn" onclick="prevSet()">◀</button>
+        <button class="action-btn action-btn--check"      id="checkBtn"    onclick="checkAnswers()">✓ CHECK</button>
+        <button class="action-btn action-btn--play-again" id="playAgainBtn" onclick="continueGame()" style="display:none">▶ CONTINUE</button>
+        <button class="set-nav__btn" id="nextSetBtn" onclick="nextSet()">▶</button>
+      </div>
+      <div class="set-nav__dots" id="setDots"></div>
     </div>
 
     <div class="match-arena" id="matchArena">
@@ -338,11 +346,6 @@
       <div class="match-svg-wrap" id="svgWrap">
         <svg id="matchSvg" xmlns="http://www.w3.org/2000/svg"></svg>
       </div>
-    </div>
-
-    <div class="action-bar">
-      <button class="action-btn action-btn--check"      id="checkBtn"    onclick="checkAnswers()">✓ CHECK</button>
-      <button class="action-btn action-btn--play-again" id="playAgainBtn" onclick="continueGame()" style="display:none">▶ CONTINUE</button>
     </div>
 
     <div class="result-banner" id="resultBanner">
@@ -615,36 +618,50 @@
     // ================================================================
     //  SET NAVIGATION
     // ================================================================
+    function buildSetDots() {
+      const container = document.getElementById('setDots');
+      container.innerHTML = '';
+      gameData.forEach((_, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'set-dot';
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          if (i !== currentSet) { SFX.navigate(); goToSet(i); }
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    function updateSetDots() {
+      document.querySelectorAll('.set-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSet);
+        dot.classList.toggle('answered', i !== currentSet && !!setConnections[i]?.size);
+      });
+    }
+
+    function goToSet(idx) {
+      currentSet = idx;
+      checked = false;
+      document.getElementById('resultBanner').style.display = 'none';
+      document.getElementById('checkBtn').style.display = '';
+      document.getElementById('playAgainBtn').style.display = 'none';
+      buildGame();
+    }
+
     function updateSetNav() {
       const total = gameData.length;
-      document.getElementById('setLabel').textContent = `BỘ ${currentSet + 1}`;
       document.getElementById('setDisplay').textContent = `BỘ: ${currentSet + 1} / ${total}`;
       document.getElementById('prevSetBtn').disabled = currentSet === 0;
       document.getElementById('nextSetBtn').disabled = currentSet === total - 1;
+      updateSetDots();
     }
 
     function prevSet() {
-      if (currentSet > 0) {
-        SFX.navigate();
-        currentSet--;
-        checked = false;
-        document.getElementById('resultBanner').style.display = 'none';
-        document.getElementById('checkBtn').style.display = '';
-        document.getElementById('playAgainBtn').style.display = 'none';
-        buildGame();
-      }
+      if (currentSet > 0) { SFX.navigate(); goToSet(currentSet - 1); }
     }
 
     function nextSet() {
-      if (currentSet < gameData.length - 1) {
-        SFX.navigate();
-        currentSet++;
-        checked = false;
-        document.getElementById('resultBanner').style.display = 'none';
-        document.getElementById('checkBtn').style.display = '';
-        document.getElementById('playAgainBtn').style.display = 'none';
-        buildGame();
-      }
+      if (currentSet < gameData.length - 1) { SFX.navigate(); goToSet(currentSet + 1); }
     }
 
     // ================================================================
@@ -742,6 +759,7 @@
       document.title = `${GAME_EMOJI} — PIXELVERSE`;
       document.getElementById('gameTitle').textContent = `${GAME_EMOJI} Nối Từ`;
 
+      buildSetDots();
       buildGame();
 
     }

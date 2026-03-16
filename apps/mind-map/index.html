@@ -278,19 +278,11 @@
       padding: 8px 0;
     }
 
-    /* ===== ACTION BAR ===== */
-    .action-bar {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 28px;
-    }
+    /* ===== ACTION BUTTONS (in score bar) ===== */
     .action-btn {
       font-family: var(--font-pixel);
-      font-size: 9px;
-      padding: 14px 22px;
-      min-height: 44px;
+      font-size: 7px;
+      padding: 8px 14px;
       border: 2px solid;
       background: transparent;
       cursor: pointer;
@@ -358,7 +350,6 @@
     @media (max-width: 480px) {
       .game-page { padding: 16px 1rem 40px; }
       .map-node { padding: 8px 10px; font-size: 12px; }
-      .action-bar { gap: 8px; }
       .result-banner { padding: 18px 14px; }
       .result-banner__score { font-size: 9px; }
     }
@@ -412,6 +403,8 @@
 
     <div class="score-bar">
       <div class="score-chip pixel-box" id="progressDisplay">0 / 0 PLACED</div>
+      <button class="action-btn action-btn--check"      id="checkBtn"     onclick="checkAnswers()">✓ CHECK</button>
+      <button class="action-btn action-btn--play-again" id="playAgainBtn" onclick="continueGame()" style="display:none">▶ CONTINUE</button>
       <div class="score-chip score-chip--yellow pixel-box pixel-box--yellow" id="scoreDisplay">SCORE: —</div>
     </div>
 
@@ -426,11 +419,6 @@
         </div>
         <div class="kw-pool" id="kwPool"></div>
       </div>
-    </div>
-
-    <div class="action-bar">
-      <button class="action-btn action-btn--check"      id="checkBtn"     onclick="checkAnswers()">✓ CHECK</button>
-      <button class="action-btn action-btn--play-again" id="playAgainBtn" onclick="continueGame()" style="display:none">▶ CONTINUE</button>
     </div>
 
     <div class="result-banner" id="resultBanner">

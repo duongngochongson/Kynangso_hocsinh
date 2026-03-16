@@ -24,7 +24,8 @@
       grid-column: 1 / -1;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
+      gap: 14px;
       padding: 10px 16px;
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
@@ -49,12 +50,6 @@
       color: var(--bg-dark);
       box-shadow: 0 0 12px var(--cyan);
     }
-    .fn-header__score {
-      font-size: 9px;
-      letter-spacing: 1px;
-      color: var(--green);
-    }
-
     /* ===== TREE SIDEBAR ===== */
     .fn-tree {
       grid-row: 2;
@@ -184,27 +179,42 @@
       grid-column: 1 / -1;
       border-top: 2px solid var(--cyan);
       box-shadow: 0 -4px 16px rgba(0,255,245,0.1);
-      padding: 10px 16px;
+      padding: 8px 16px 10px;
       background: var(--bg-mid);
       display: flex;
-      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+    }
+    /* Story + answer row */
+    .fn-q-block {
+      flex: 1;
+      min-width: 0;
+    }
+    /* Bottom row: type badge + nav group */
+    .fn-bottom-nav {
+      display: flex;
+      align-items: stretch;
       gap: 12px;
-      flex-wrap: wrap;
-      min-height: 56px;
+    }
+    /* Nav group: arrows+check row on top, dots below */
+    .fn-nav-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
     }
     .fn-q-nav {
       display: flex;
       align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-      padding-top: 4px;
+      gap: 10px;
     }
     .fn-nav-btn {
       background: transparent;
       border: 2px solid var(--grey);
       color: var(--grey);
       font-size: 16px;
-      padding: 2px 8px;
+      padding: 2px 10px;
       cursor: pointer;
       transition: all 0.15s;
     }
@@ -213,25 +223,16 @@
       color: var(--cyan);
     }
     .fn-nav-btn:disabled { opacity: 0.3; cursor: default; }
-    .fn-q-label {
-      font-size: 9px;
-      color: var(--yellow);
-      letter-spacing: 1px;
-      min-width: 50px;
-      text-align: center;
-    }
 
-    /* Question block with type badge + story + answer */
-    .fn-q-block {
-      flex: 1;
-      min-width: 200px;
-    }
+    /* Type badge — tall, left of nav group */
     .fn-q-type-badge {
-      font-size: 8px;
+      font-size: 10px;
       letter-spacing: 2px;
-      padding: 2px 8px;
-      margin-bottom: 5px;
-      display: inline-block;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
     .fn-q-type-badge--find {
       background: rgba(0,255,245,0.08);
@@ -286,15 +287,6 @@
     .fn-write-input.input-correct { border-color: var(--green); color: var(--green); }
     .fn-write-input.input-wrong   { border-color: var(--magenta); color: var(--magenta); }
 
-    /* Right side: check btn + dots */
-    .fn-bar-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 8px;
-      flex-shrink: 0;
-      padding-top: 4px;
-    }
     .fn-check-btn {
       font-family: var(--font-pixel);
       font-size: 8px;
@@ -412,8 +404,7 @@
       .fn-grid-icon { font-size: 18px; }
       .fn-grid-name { font-size: 7px; }
       .fn-write-input { width: 140px; }
-      .fn-answer-bar { padding: 6px 8px; gap: 6px; min-height: 48px; }
-      .fn-q-label { min-width: 36px; }
+      .fn-answer-bar { padding: 6px 8px; gap: 6px; }
       .result-banner { padding: 20px 16px; width: 88vw; box-sizing: border-box; }
       .fn-header { padding: 8px 10px; }
     }
@@ -455,11 +446,8 @@
   <div class="fn-layout">
     <!-- Header -->
     <div class="fn-header">
-      <div style="display:flex;align-items:center;">
-        <a href="../../index.html" class="fn-header__back" onclick="SFX.navigate()">◀ HOME</a>
-        <h1 class="fn-header__title" id="gameTitle">🐟 Đặt Tên File</h1>
-      </div>
-      <span class="fn-header__score" id="scoreDisplay">SCORE: — / 10</span>
+      <a href="../../index.html" class="fn-header__back" onclick="SFX.navigate()">◀ HOME</a>
+      <h1 class="fn-header__title" id="gameTitle">🐟 Đặt Tên File</h1>
     </div>
 
     <!-- Tree sidebar -->
@@ -476,14 +464,7 @@
 
     <!-- Answer bar -->
     <div class="fn-answer-bar" id="fnAnswerBar">
-      <div class="fn-q-nav">
-        <button class="fn-nav-btn" id="fnPrevQ">◀</button>
-        <span class="fn-q-label" id="fnQLabel">Q1/10</span>
-        <button class="fn-nav-btn" id="fnNextQ">▶</button>
-      </div>
-
       <div class="fn-q-block">
-        <div class="fn-q-type-badge fn-q-type-badge--find" id="fnQTypeBadge">🔍 TÌM FILE</div>
         <div class="fn-story-text" id="fnStoryText"></div>
         <div class="fn-q-answer-row">
           <div class="fn-selected-path empty" id="fnSelectedPath">Chưa chọn</div>
@@ -493,9 +474,16 @@
         </div>
       </div>
 
-      <div class="fn-bar-right">
-        <button class="fn-check-btn" id="fnCheckBtn">✓ CHECK</button>
-        <div class="fn-dots" id="fnDots"></div>
+      <div class="fn-bottom-nav">
+        <div class="fn-q-type-badge fn-q-type-badge--find" id="fnQTypeBadge">🔍 TÌM FILE</div>
+        <div class="fn-nav-group">
+          <div class="fn-q-nav">
+            <button class="fn-nav-btn" id="fnPrevQ">◀</button>
+            <button class="fn-check-btn" id="fnCheckBtn">✓ CHECK</button>
+            <button class="fn-nav-btn" id="fnNextQ">▶</button>
+          </div>
+          <div class="fn-dots" id="fnDots"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -893,7 +881,6 @@
       updateNavBtns();
       updateCheckBtn();
       updateDots();
-      document.getElementById('fnQLabel').textContent = `Q${idx + 1}/${TOTAL_Q}`;
     }
 
     function updateNavBtns() {
@@ -956,7 +943,6 @@
       SFX[correct === TOTAL_Q ? 'correct' : 'wrong']();
       showCheckFeedback(currentQ);
       updateDots();
-      updateScore(correct);
       showFinalResults(correct);
     }
 
@@ -994,9 +980,6 @@
     // ================================================================
     //  SCORE + FINAL RESULTS
     // ================================================================
-    function updateScore(correct) {
-      document.getElementById('scoreDisplay').textContent = `SCORE: ${correct} / ${TOTAL_Q}`;
-    }
 
     function showFinalResults(correct) {
       const pct = Math.round(correct / TOTAL_Q * 100);

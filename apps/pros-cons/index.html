@@ -73,7 +73,6 @@
       .score-bar { gap: 10px; }
       .topic-card { padding: 14px; }
       .drop-zone { min-height: 60px; }
-      .action-bar { gap: 8px; }
       .result-banner__score { font-size: clamp(14px, 5vw, 22px); }
       .result-banner { padding: 20px 16px; }
     }
@@ -254,19 +253,11 @@
       padding: 20px 0;
     }
 
-    /* ===== ACTION BUTTONS ===== */
-    .action-bar {
-      display: flex;
-      justify-content: center;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-top: 32px;
-    }
+    /* ===== ACTION BUTTONS (in score bar) ===== */
     .action-btn {
       font-family: var(--font-pixel);
-      font-size: 9px;
-      padding: 16px 22px;
-      min-height: 44px;
+      font-size: 8px;
+      padding: 6px 14px;
       border: 2px solid;
       background: transparent;
       cursor: pointer;
@@ -370,6 +361,8 @@
 
     <div class="score-bar">
       <div class="score-chip pixel-box" id="progressDisplay">0 / 0 PLACED</div>
+      <button class="action-btn action-btn--check"      id="checkBtn"    onclick="checkAnswers()">✓ CHECK</button>
+      <button class="action-btn action-btn--play-again" id="playAgainBtn" onclick="continueGame()" style="display:none">▶ CONTINUE</button>
       <div class="score-chip pixel-box pixel-box--yellow" id="scoreDisplay">SCORE: —</div>
     </div>
 
@@ -387,11 +380,6 @@
         </div>
       </div>
 
-    </div>
-
-    <div class="action-bar">
-      <button class="action-btn action-btn--check"      id="checkBtn"    onclick="checkAnswers()">✓ CHECK</button>
-      <button class="action-btn action-btn--play-again" id="playAgainBtn" onclick="continueGame()" style="display:none">▶ CONTINUE</button>
     </div>
 
     <div class="result-banner" id="resultBanner">
