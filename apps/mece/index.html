@@ -121,15 +121,10 @@
       background: rgba(255,0,204,0.08);
     }
 
-    /* ===== ACTION BAR ===== */
-    .action-bar {
-      display: flex; justify-content: center;
-      gap: 16px; margin-top: 28px;
-    }
+    /* ===== ACTION BUTTONS (in score bar) ===== */
     .action-btn {
       font-family: var(--font-pixel);
-      font-size: 9px; padding: 14px 22px;
-      min-height: 44px;
+      font-size: 8px; padding: 6px 14px;
       border: 2px solid; background: transparent;
       cursor: pointer; letter-spacing: 1px;
       transition: all 0.1s steps(1);
@@ -222,16 +217,13 @@
 
     <div class="score-bar">
       <div class="score-chip pixel-box" id="progressDisplay">0 / 0 ANSWERED</div>
+      <button class="action-btn action-btn--check" id="checkBtn">✓ CHECK</button>
+      <button class="action-btn action-btn--continue" id="continueBtn" style="display:none">▶ CONTINUE</button>
       <div class="score-chip pixel-box pixel-box--yellow" id="scoreDisplay">SCORE: —</div>
     </div>
 
     <div id="questionsContainer"></div>
     <div id="meceEmpty" class="mece-empty" style="display:none">Chưa có câu hỏi nào. Thêm trong Admin.</div>
-
-    <div class="action-bar">
-      <button class="action-btn action-btn--check" id="checkBtn">✓ CHECK</button>
-      <button class="action-btn action-btn--continue" id="continueBtn" style="display:none">▶ CONTINUE</button>
-    </div>
 
     <div class="result-banner" id="resultBanner">
       <div class="result-banner__score" id="resultScore"></div>

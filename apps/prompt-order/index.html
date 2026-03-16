@@ -449,7 +449,6 @@
     function goToQ(idx) {
       currentQ = idx;
       document.getElementById('qNumber').textContent = idx + 1;
-      document.getElementById('fnQLabel').textContent = `Q${idx + 1}/${totalQ}`;
       document.getElementById('fnPrevQ').disabled = idx === 0;
       document.getElementById('fnNextQ').disabled = idx === totalQ - 1;
       clearSelection();
