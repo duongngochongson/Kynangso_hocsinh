@@ -34,19 +34,25 @@
       margin: 0;
     }
     .fn-header__back {
-      font-size: 11px;
-      color: var(--grey);
+      font-family: var(--font-pixel);
+      font-size: 8px;
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
       text-decoration: none;
       letter-spacing: 1px;
+      padding: 5px 12px;
       margin-right: 12px;
-      transition: color 0.15s;
+      transition: all 0.1s steps(1);
     }
-    .fn-header__back:hover { color: var(--cyan); }
+    .fn-header__back:hover {
+      background: var(--cyan);
+      color: var(--bg-dark);
+      box-shadow: 0 0 12px var(--cyan);
+    }
     .fn-header__score {
       font-size: 9px;
       letter-spacing: 1px;
       color: var(--green);
-      text-shadow: 0 0 6px var(--green);
     }
 
     /* ===== TREE SIDEBAR ===== */
@@ -302,8 +308,7 @@
       transition: all 0.15s;
       flex-shrink: 0;
     }
-    .fn-check-btn:hover:not(:disabled) { box-shadow: 0 0 18px var(--green); }
-    .fn-check-btn:disabled { opacity: 0.3; cursor: default; box-shadow: none; }
+    .fn-check-btn:hover { box-shadow: 0 0 18px var(--green); }
     .fn-dots {
       display: flex;
       gap: 5px;
@@ -419,7 +424,7 @@
   <nav class="navbar">
     <a href="../../index.html" class="navbar__logo">◈ PIXELVERSE</a>
     <ul class="navbar__links">
-      <li><a href="../../index.html" title="Home">🏠</a></li>
+      <li><a href="../../index.html" title="Home">◈</a></li>
       <li>
         <button class="navbar__grid-btn" id="gamesBtn" title="Games">
           <span class="navbar__grid-btn__dots">
@@ -451,7 +456,7 @@
     <!-- Header -->
     <div class="fn-header">
       <div style="display:flex;align-items:center;">
-        <a href="../../index.html" class="fn-header__back" onclick="SFX.navigate()">◂</a>
+        <a href="../../index.html" class="fn-header__back" onclick="SFX.navigate()">◀ HOME</a>
         <h1 class="fn-header__title" id="gameTitle">🐟 Đặt Tên File</h1>
       </div>
       <span class="fn-header__score" id="scoreDisplay">SCORE: — / 10</span>
@@ -489,7 +494,7 @@
       </div>
 
       <div class="fn-bar-right">
-        <button class="fn-check-btn" id="fnCheckBtn" disabled>✓ CHECK</button>
+        <button class="fn-check-btn" id="fnCheckBtn">✓ CHECK</button>
         <div class="fn-dots" id="fnDots"></div>
       </div>
     </div>
@@ -924,8 +929,7 @@
     //  CHECK BUTTON
     // ================================================================
     function updateCheckBtn() {
-      const allDone = questions.every((_, i) => draftAnswers[i] !== undefined);
-      document.getElementById('fnCheckBtn').disabled = !allDone;
+      // Check always enabled
     }
 
     function doCheckAll() {

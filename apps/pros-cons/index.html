@@ -17,32 +17,12 @@
       margin: 0 auto;
     }
 
-    .page-header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-    .page-header__back {
-      display: inline-block;
-      font-size: 12px;
-      color: var(--grey);
-      text-decoration: none;
-      letter-spacing: 1px;
-      margin-bottom: 14px;
-      transition: color 0.1s;
-    }
-    .page-header__back:hover { color: var(--cyan); text-shadow: 0 0 8px var(--cyan); }
-
     .page-header h1 {
       font-family: var(--font-vi-heading);
       font-size: clamp(22px, 4vw, 34px);
       font-weight: 900;
       color: var(--cyan);
       margin-bottom: 8px;
-    }
-    .page-header__sub {
-      font-family: var(--font-vi-body);
-      font-size: 13px;
-      color: rgba(232,232,255,0.55);
     }
 
     /* ===== SCORE BAR ===== */
@@ -63,14 +43,10 @@
     #scoreDisplay {
       color: var(--yellow);
       border-color: var(--yellow);
-      text-shadow: 0 0 8px var(--yellow);
-      box-shadow: 0 0 10px rgba(255,230,0,0.3);
     }
     #progressDisplay {
       color: var(--cyan);
       border-color: var(--cyan);
-      text-shadow: 0 0 8px var(--cyan);
-      box-shadow: 0 0 10px rgba(0,255,245,0.3);
     }
 
     /* ===== GAME AREA ===== */
@@ -356,7 +332,7 @@
   <nav class="navbar">
     <a href="../../index.html" class="navbar__logo">◈ PIXELVERSE</a>
     <ul class="navbar__links">
-      <li><a href="../../index.html" title="Home">🏠</a></li>
+      <li><a href="../../index.html" title="Home">◈</a></li>
       <li>
         <button class="navbar__grid-btn" id="gamesBtn" title="Games">
           <span class="navbar__grid-btn__dots">
@@ -387,7 +363,7 @@
   <main class="game-page">
 
     <div class="page-header">
-      <a href="../../index.html" class="page-header__back">◀ BACK TO HOME</a>
+      <a href="../../index.html" class="page-header__back">◀ HOME</a>
       <h1>🐺 Đoán Ưu / Nhược</h1>
       <p class="page-header__sub">Kéo thả thẻ vào đúng ô tương ứng với từng chủ đề</p>
     </div>

@@ -110,10 +110,9 @@
     .stat-item__value {
       font-size: clamp(16px, 4vw, 20px);
       color: var(--cyan);
-      text-shadow: 0 0 12px var(--cyan);
     }
-    .stat-item:nth-child(2) .stat-item__value { color: var(--magenta); text-shadow: 0 0 12px var(--magenta); }
-    .stat-item:nth-child(3) .stat-item__value { color: var(--yellow); text-shadow: 0 0 12px var(--yellow); }
+    .stat-item:nth-child(2) .stat-item__value { color: var(--magenta); }
+    .stat-item:nth-child(3) .stat-item__value { color: var(--yellow); }
     .stat-item__label {
       font-size: 7px;
       color: rgba(232,232,255,0.5);
@@ -126,8 +125,8 @@
       letter-spacing: 0;
     }
 
-    /* Remove glow from app cards */
-    .app-card { box-shadow: none !important; border-color: var(--grey); border: 2px solid var(--grey) !important; }
+    /* Remove glow from app cards (colors kept via color-class border in style.css) */
+    .app-card { box-shadow: none !important; }
 
   </style>
 </head>
