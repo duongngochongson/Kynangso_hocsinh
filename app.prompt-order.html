@@ -10,10 +10,10 @@
 .types-col{display:flex;flex-direction:column;gap:8px}
 .type-row{display:flex;align-items:flex-start;gap:10px;background:var(--card);border:2px solid rgba(255,255,255,.06);padding:8px 10px}
 .type-row__label{font-family:var(--fb);font-size:11px;font-weight:600;padding:5px 8px;border:1px solid;flex-shrink:0;min-width:82px;text-align:center;margin-top:2px;white-space:nowrap}
-.type-row--role .type-row__label{color:var(--cyan);border-color:var(--cyan)}.type-row--context .type-row__label{color:var(--magenta);border-color:var(--magenta)}
-.type-row--task .type-row__label{color:var(--green);border-color:var(--green)}.type-row--output .type-row__label{color:var(--yellow);border-color:var(--yellow)}
-.type-row--style .type-row__label{color:#ff9966;border-color:#ff9966}.type-row--reference .type-row__label{color:#aa88ff;border-color:#aa88ff}
-.type-row--other .type-row__label{color:var(--grey);border-color:var(--grey)}
+.type-row--role .type-row__label{color:var(--info);border-color:var(--info)}.type-row--context .type-row__label{color:var(--game-octopus);border-color:var(--game-octopus)}
+.type-row--task .type-row__label{color:var(--success);border-color:var(--success)}.type-row--output .type-row__label{color:var(--accent);border-color:var(--accent)}
+.type-row--style .type-row__label{color:var(--game-fox);border-color:var(--game-fox)}.type-row--reference .type-row__label{color:var(--game-octopus);border-color:var(--game-octopus)}
+.type-row--other .type-row__label{color:var(--text-tertiary);border-color:var(--text-tertiary)}
 .type-row__zone{flex:1;min-height:44px;border:2px dashed rgba(255,255,255,.12);padding:6px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;transition:border-color .15s,background .15s}
 .type-row__zone.drag-over{border-color:var(--yellow);box-shadow:0 0 8px rgba(255,230,0,.25);background:rgba(255,230,0,.03)}
 .type-row__zone.accepting{border-color:rgba(255,230,0,.5);border-style:solid;cursor:pointer}.type-row__zone.accepting:hover{border-color:var(--yellow)}
@@ -32,27 +32,27 @@
 @media(max-width:768px){.game-area{grid-template-columns:1fr}.card-pool-section{order:-1;position:static}.type-row__zone .drag-card{width:100%}}
 @media(max-width:480px){.game-page{padding:20px 1rem 30px}.type-row{padding:6px 8px;gap:6px}.type-row__label{min-width:70px;font-size:10px;padding:4px 6px}.drag-card{font-size:12px}}</style></head>
 <body><main class="game-page">
-<div class="page-header"><a href="index.html" class="page-header__back">◀ HOME</a>
-<h1 class="po-title">🐜 PROMPT ORDER</h1>
-<p class="page-header__sub font-vi">Kéo thẻ vào đúng loại thành phần prompt</p></div>
+<div class="page-header"><a href="index.html" class="page-header__back">← Home</a>
+<h1 class="po-title">🐜 Sắp xếp Prompt</h1>
+<p class="page-header__sub">Kéo thẻ vào đúng loại thành phần prompt</p></div>
 <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:14px">
 <div class="fn-q-nav">
-<button class="fn-nav-btn" id="prevBtn">◀</button>
-<button class="action-btn action-btn--check" id="checkBtn">✓ CHECK</button>
-<button class="action-btn action-btn--continue" id="contBtn" style="display:none">▶ CONTINUE</button>
-<button class="fn-nav-btn" id="nextBtn">▶</button></div>
+<button class="fn-nav-btn" id="prevBtn">←</button>
+<button class="btn btn-success" id="checkBtn">Check</button>
+<button class="btn btn-secondary" id="contBtn" style="display:none">Tiếp tục</button>
+<button class="fn-nav-btn" id="nextBtn">→</button></div>
 <div class="fn-dots" id="fnDots"></div>
-<span class="po-score" id="scoreDisp">SCORE: — / —</span></div>
-<div class="po-q-header">CÂU <span class="po-q-number" id="qNum">1</span> — KÉO THẺ VÀO ĐÚNG LOẠI</div>
+<span class="po-score" id="scoreDisp">Điểm: — / —</span></div>
+<div class="po-q-header">Câu <span class="po-q-number" id="qNum">1</span> — Kéo thẻ vào đúng loại</div>
 <div class="game-area"><div class="types-col" id="typesCol"></div>
-<div class="card-pool-section"><div class="card-pool-header">▸ THẺ CÒN LẠI</div>
+<div class="card-pool-section"><div class="card-pool-header">Thẻ còn lại</div>
 <div class="card-pool" id="cardPool"><div class="card-pool__empty" id="poolEmpty">Tất cả thẻ đã được phân loại!</div></div></div></div>
 <div class="result-banner" id="resultBanner"><div class="result-banner__score" id="resultScore"></div><div class="result-banner__msg" id="resultMsg"></div></div>
 <div class="po-empty" id="poEmpty" style="display:none;text-align:center;padding:60px 20px;color:var(--grey);font-size:11px">Chưa có câu hỏi nào. Thêm trong Admin.</div></main>
 <script>
 const TO=['role','context','task','output','style','reference','other'];
 const TL={role:'Vai trò',context:'Bối cảnh',task:'Nhiệm vụ',output:'Đầu ra',style:'Phong cách',reference:'Tham khảo',other:'Khác'};
-const TC={role:'var(--cyan)',context:'var(--magenta)',task:'var(--green)',output:'var(--yellow)',style:'#ff9966',reference:'#aa88ff',other:'var(--grey)'};
+const TC={role:'var(--info)',context:'var(--game-octopus)',task:'var(--success)',output:'var(--accent)',style:'var(--game-fox)',reference:'var(--game-octopus)',other:'var(--text-tertiary)'};
 let qs=[],ap={},so={},cr={},cq=0,tq=0,chk=false,dpIdx=null,spIdx=null;
 function initPl(){const p={};TO.forEach(t=>p[t]=[]);return p}
 function getPlaced(qi){const s=new Set(),p=ap[qi];if(p)TO.forEach(t=>(p[t]||[]).forEach(i=>s.add(i)));return s}
