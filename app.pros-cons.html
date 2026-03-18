@@ -11,20 +11,20 @@
 .topic-card.highlight{border-color:var(--accent);background:var(--accent-subtle)}
 .topic-card__hdr{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .topic-card__num{font-family:var(--font-sans);font-size:12px;font-weight:600;color:var(--accent);min-width:28px}
-.topic-card__title{font-family:var(--font-serif);font-size:16px;font-weight:700;color:var(--text-primary)}
+.topic-card__title{font-family:var(--font-serif);font-size:22px;font-weight:700;color:var(--text-primary)}
 .topic-card__passage{font-family:var(--font-sans);font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px;padding-left:clamp(0px,5vw,40px)}
 .drop-zones{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-left:clamp(0px,5vw,40px)}
-.drop-zone{min-height:72px;border:1px dashed var(--border-default);border-radius:6px;padding:8px;display:flex;align-items:center;justify-content:center;position:relative;transition:all 0.15s}
+.drop-zone{min-height:96px;border:1px dashed var(--border-default);border-radius:6px;padding:10px;display:flex;align-items:center;justify-content:center;position:relative;transition:all 0.15s}
 .drop-zone--pro{border-color:var(--success-subtle)}.drop-zone--con{border-color:var(--error-subtle)}
 .drop-zone.drag-over{background:var(--bg-elevated)}
 .drop-zone--pro.drag-over{border-color:var(--success);background:rgba(92,184,92,.08)}
 .drop-zone--con.drag-over{border-color:var(--error);background:rgba(217,100,89,.08)}
-.drop-zone__label{font-size:11px;font-weight:600;position:absolute;top:5px;left:7px;letter-spacing:0.5px;opacity:0.7}
+.drop-zone__label{font-size:13px;font-weight:600;position:absolute;top:6px;left:8px;letter-spacing:0.5px;opacity:0.8}
 .drop-zone--pro .drop-zone__label{color:var(--success)}.drop-zone--con .drop-zone__label{color:var(--error)}
 .drop-zone__empty{font-family:var(--font-sans);font-size:11px;color:var(--text-tertiary);text-align:center;margin-top:10px}
 .drop-zone.correct{border-style:solid;border-color:var(--success);background:var(--success-subtle)}
 .drop-zone.wrong{border-style:solid;border-color:var(--error);background:var(--error-subtle)}
-.drag-card{background:var(--bg-elevated);border:1px solid var(--border-default);border-radius:4px;padding:10px 12px;font-family:var(--font-sans);font-size:12px;color:var(--text-primary);line-height:1.5;cursor:grab;transition:all 0.15s;width:100%;position:relative}
+.drag-card{background:var(--bg-elevated);border:1px solid var(--border-default);border-radius:4px;padding:12px 16px;font-family:var(--font-sans);font-size:15px;color:var(--text-primary);line-height:1.5;cursor:grab;transition:all 0.15s;width:100%;position:relative;min-height:56px;display:flex;align-items:center;justify-content:center}
 .drag-card:active{cursor:grabbing;opacity:0.6}.drag-card:hover{border-color:var(--accent)}
 .drag-card.dragging{opacity:0.4}
 .drag-card.selected{border-color:var(--accent);background:var(--accent-subtle)}
@@ -35,7 +35,7 @@
 .drop-zone.correct .drag-card{border-color:var(--success);color:var(--success)}
 .drop-zone.wrong .drag-card{border-color:var(--error);color:var(--error)}
 .card-pool-section{position:sticky;top:80px}
-.card-pool-header{font-family:var(--font-sans);font-size:13px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px;margin-bottom:12px}
+.card-pool-header{font-family:var(--font-sans);font-size:16px;font-weight:600;color:var(--text-primary);letter-spacing:0.25px;margin-bottom:14px}
 .card-pool{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:12px;min-height:120px;display:flex;flex-direction:column;gap:8px}
 .card-pool.drag-over{border-color:var(--accent);background:var(--accent-subtle)}
 .card-pool__empty{font-family:var(--font-sans);font-size:12px;color:var(--text-tertiary);text-align:center;padding:20px 0}
@@ -47,9 +47,10 @@
 <body><main class="game-page">
 <div class="page-header"><a href="index.html" class="page-header__back">← Home</a><h1>🐺 Đoán Ưu / Nhược</h1>
 <p class="page-header__sub">Kéo thả thẻ vào đúng ô tương ứng với từng chủ đề</p></div>
+<div class="how-to"><strong>Cách chơi:</strong> Mỗi chủ đề có 2 ô: Ưu điểm (xanh) và Nhược điểm (đỏ). Kéo thẻ vào ô đúng. Nhấp "Check" khi xong.</div>
 <div class="score-bar"><div class="score-chip" id="progDisp">0 / 0 đặt</div>
-<button class="btn btn-success" id="checkBtn" onclick="checkAnswers()">Check</button>
-<button class="btn btn-secondary" id="contBtn" onclick="contGame()" style="display:none">Tiếp tục</button>
+<button class="btn btn-success btn-lg" id="checkBtn" onclick="checkAnswers()">Check</button>
+<button class="btn btn-secondary btn-lg" id="contBtn" onclick="contGame()" style="display:none">Tiếp tục</button>
 <div class="score-chip" id="scoreDisp">Điểm: —</div></div>
 <div class="game-area"><div class="topics-col" id="topicsCol"></div>
 <div class="card-pool-section"><div class="card-pool-header">Thẻ còn lại</div>
