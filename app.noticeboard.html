@@ -18,7 +18,7 @@
 </style></head>
 <body><main class="game-page">
 <div class="page-header"><a href="index.html" class="page-header__back" onclick="SFX.navigate()">← Home</a><h1 class="nb-title">🐝 Bảng Thông Báo</h1></div>
-<div id="noticeList"></div><div class="nb-empty" id="nbEmpty" style="display:none">CHƯA CÓ THÔNG BÁO NÀO.<br>THÊM TRONG ADMIN.</div></main>
+<div id="noticeList"></div><div class="nb-empty" id="nbEmpty" style="display:none">Chưa có thông báo nào.<br>Thêm trong admin.</div></main>
 <script>
 function linkify(t){return PV.escHtml(t).replace(/(https?:\/\/[^\s<>"]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>')}
 function copy(t,b){navigator.clipboard?.writeText(t).catch(()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a)});const o=b.textContent;b.textContent='✓ COPIED';setTimeout(()=>b.textContent=o,2000)}
