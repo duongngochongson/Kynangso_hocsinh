@@ -70,7 +70,7 @@ upSetNav()}
 function buildSetDots(){PV.buildDots(gd.length,'ctrlDots');
 document.querySelectorAll('#ctrlDots .control-bar__dot').forEach((d,i)=>{d.addEventListener('click',e=>{e.stopPropagation();if(i!==cs){SFX.navigate();goTo(i)}})})}
 function upSetDots(){const states=gd.map((_,i)=>{if(i===cs)return'active';if(gameState.setResults[i])return gameState.setResults[i].pct===100?'answered':'wrong-q';if(ans[i]&&Object.keys(ans[i]).length>0)return'drafted';return null});PV.setAllDots(states,'ctrlDots')}
-function goTo(i){cs=i;gameState.currentSetIdx=i;chk=false;document.getElementById('resultBanner').style.display='none';document.getElementById('resultBanner').classList.remove('show');document.getElementById('checkBtn').style.display='';document.getElementById('contBtn').style.display='none';buildGame()}
+function goTo(i){cs=i;gameState.currentSetIdx=i;chk=false;document.getElementById('resultBanner').classList.remove('show','error');document.getElementById('checkBtn').style.display='';document.getElementById('contBtn').style.display='none';buildGame()}
 function upSetNav(){document.getElementById('setDisp').textContent=`Bộ: ${cs+1} / ${gd.length}`;document.getElementById('prevBtn').disabled=cs===0;document.getElementById('nextBtn').disabled=cs===gd.length-1;upSetDots()}
 function prevSet(){if(cs>0){SFX.navigate();goTo(cs-1)}}function nextSet(){if(cs<gd.length-1){SFX.navigate();goTo(cs+1)}}
 function checkAnswers(){if(gameState.checkMode==='all'){checkAllSets()}else{checkCurrentSet()}}
@@ -100,7 +100,7 @@ document.getElementById('checkBtn').style.display='none';document.getElementById
 function contGame(){chk=false;document.querySelectorAll('.qcard').forEach(c=>c.classList.remove('correct','wrong'));
 document.querySelectorAll('.ans-btn').forEach(b=>{b.classList.remove('r-ok','r-bad');
 const gr=b.closest('.ans-group');if(gr)b.classList.toggle('selected',b.dataset.answer===(ans[cs]&&ans[cs][gr.dataset.qid]))});
-document.getElementById('resultBanner').style.display='none';document.getElementById('checkBtn').style.display='';document.getElementById('contBtn').style.display='none';document.getElementById('scoreDisp').style.display='none'}
+document.getElementById('resultBanner').classList.remove('show','error');document.getElementById('checkBtn').style.display='';document.getElementById('contBtn').style.display='none';document.getElementById('scoreDisp').style.display='none'}
 document.getElementById('checkBtn').addEventListener('click',checkAnswers);
 document.getElementById('checkToggle').addEventListener('click',e=>{e.stopPropagation();SFX.click();PV.toggleCheckMode(gameState)});
 document.getElementById('contBtn').addEventListener('click',contGame);

@@ -104,7 +104,7 @@ pool.addEventListener('dragover',e=>{e.preventDefault();pool.classList.add('drag
 pool.addEventListener('dragleave',e=>{if(!pool.contains(e.relatedTarget))pool.classList.remove('drag-over')});
 pool.addEventListener('drop',e=>{e.preventDefault();pool.classList.remove('drag-over');if(!dpIdx||chk)return;rmFromPl(cs,dpIdx.qi,dpIdx.pi);SFX.click();renderRows();renderPool();dpIdx=null});
 document.addEventListener('click',clrSel);
-function goTo(i){cs=i;gameState.currentSetIdx=i;chk=false;document.getElementById('resultBanner').style.display='none';document.getElementById('resultBanner').classList.remove('show');document.getElementById('checkBtn').style.display='';document.getElementById('contBtn').style.display='none';clrSel();renderRows();renderPool();upSetNav()}
+function goTo(i){cs=i;gameState.currentSetIdx=i;chk=false;document.getElementById('resultBanner').classList.remove('show','error');document.getElementById('checkBtn').style.display='';document.getElementById('contBtn').style.display='none';clrSel();renderRows();renderPool();upSetNav()}
 function upSetNav(){document.getElementById('setDisp').textContent=`Bộ: ${cs+1} / ${ts}`;document.getElementById('prevBtn').disabled=cs===0;document.getElementById('nextBtn').disabled=cs===ts-1;upDots()}
 function buildSetDots(){PV.buildDots(ts,'ctrlDots');
 document.querySelectorAll('#ctrlDots .control-bar__dot').forEach((d,i)=>{d.addEventListener('click',e=>{e.stopPropagation();if(i!==cs){SFX.navigate();goTo(i)}})})}
@@ -136,7 +136,7 @@ gameState.globalResults={correct:globalOk,total:globalTot,pct:globalPct};
 SFX[globalPct===100?'correct':'wrong']();renderRows();renderPool();upDots();
 const sdpo2=document.getElementById('scoreDisp');sdpo2.style.display='';sdpo2.textContent=`Điểm: ${globalOk}/${globalTot}`;
 PV.showResult(globalOk,globalTot,PV.checkMsg(globalPct));document.getElementById('checkBtn').style.display='none';document.getElementById('contBtn').style.display=''}
-function doCont(){chk=false;cr={};document.getElementById('resultBanner').style.display='none';document.getElementById('resultBanner').classList.remove('show');document.getElementById('checkBtn').style.display='';document.getElementById('contBtn').style.display='none';
+function doCont(){chk=false;cr={};document.getElementById('resultBanner').classList.remove('show','error');document.getElementById('checkBtn').style.display='';document.getElementById('contBtn').style.display='none';
 const sdpo3=document.getElementById('scoreDisp');sdpo3.style.display='none';sdpo3.textContent='Điểm: 0';renderRows();renderPool();upDots()}
 document.getElementById('checkBtn').addEventListener('click',doCheck);
 document.getElementById('checkToggle').addEventListener('click',e=>{e.stopPropagation();SFX.click();PV.toggleCheckMode(gameState)});

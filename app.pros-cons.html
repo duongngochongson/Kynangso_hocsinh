@@ -83,20 +83,21 @@ z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('drag-over'
 z.addEventListener('dragleave',e=>{z.classList.remove('drag-over')});
 z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('drag-over');if(!dragId||chk)return;doDrop(tp,t.id)});
 z.addEventListener('click',e=>{e.stopPropagation();if(!selId||chk)return;dragId=selId;clrSel();SFX.place();doDrop(tp,t.id)});
-if(ds[tp]){const c=getCard(ds[tp]);if(c){const el=mkCard(c);z.appendChild(el);z.querySelector('.drop-zone__empty').style.display='none'}}})});
-document.addEventListener('click',()=>clrSel(),{capture:false})}
+if(ds[tp]){const c=getCard(ds[tp]);if(c){const el=mkCard(c);z.appendChild(el);z.querySelector('.drop-zone__empty').style.display='none'}}})})}
 function renderPool(){const pool=document.getElementById('cardPool'),emp=document.getElementById('poolEmpty');
 pool.querySelectorAll('.drag-card').forEach(c=>c.remove());
 const qs=gd[cs].questions||[];const placed=new Set();
 qs.forEach(t=>{const ds=getDropSt(t.id);if(ds.pro)placed.add(ds.pro);if(ds.con)placed.add(ds.con)});
 let cards=[];qs.forEach(t=>{cards.push({id:t.pro.id,text:t.pro.text,tp:'pro'},{id:t.con.id,text:t.con.text,tp:'con'})});
-cards=PV.shuffle(cards).filter(c=>!placed.has(c.id));emp.style.display=cards.length===0?'block':'none';
-cards.forEach(c=>pool.appendChild(mkCard(c)));
-pool.addEventListener('dragover',e=>{e.preventDefault();pool.classList.add('drag-over')});
-pool.addEventListener('dragleave',e=>{if(!pool.contains(e.relatedTarget))pool.classList.remove('drag-over')});
-pool.addEventListener('drop',e=>{e.preventDefault();pool.classList.remove('drag-over');if(!dragId||chk)return;
+cards=cards.filter(c=>!placed.has(c.id));emp.style.display=cards.length===0?'block':'none';
+cards.forEach(c=>pool.appendChild(mkCard(c)));}
+const _pool=document.getElementById('cardPool');
+_pool.addEventListener('dragover',e=>{e.preventDefault();_pool.classList.add('drag-over')});
+_pool.addEventListener('dragleave',e=>{if(!_pool.contains(e.relatedTarget))_pool.classList.remove('drag-over')});
+_pool.addEventListener('drop',e=>{e.preventDefault();_pool.classList.remove('drag-over');if(!dragId||chk)return;
 (gd[cs].questions||[]).forEach(t=>{const ds=getDropSt(t.id);if(ds.pro===dragId)ds.pro=null;if(ds.con===dragId)ds.con=null});
-dragId=null;renderTopics();renderPool();upSetDots()})}
+dragId=null;renderTopics();renderPool();upSetDots()});
+document.addEventListener('click',()=>clrSel());
 function mkCard(card){const d=document.createElement('div');d.className='drag-card';d.draggable=true;d.dataset.cardId=card.id;d.textContent=card.text;
 d.addEventListener('click',e=>{e.stopPropagation();if(chk)return;if(selId===card.id)clrSel();else{clrSel();selId=card.id;d.classList.add('selected');SFX.select();document.querySelectorAll('.drop-zone').forEach(z=>z.classList.add('accepting'))}});
 d.addEventListener('dragstart',e=>{clrSel();dragId=card.id;d.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',card.id)});
@@ -112,7 +113,7 @@ function buildSetDots(){PV.buildDots(gd.length,'ctrlDots');
 document.querySelectorAll('#ctrlDots .control-bar__dot').forEach((d,i)=>{d.addEventListener('click',e=>{e.stopPropagation();if(i!==cs){SFX.navigate();goTo(i)}})})}
 function upSetDots(){const states=gd.map((_,i)=>{if(i===cs)return'active';if(gameState.setResults[i])return gameState.setResults[i].pct===100?'answered':'wrong-q';
 const ds=sDropSt[i];if(ds&&Object.values(ds).some(q=>q&&(q.pro||q.con)))return'drafted';return null});PV.setAllDots(states,'ctrlDots')}
-function goTo(i){cs=i;gameState.currentSetIdx=i;chk=false;document.getElementById('resultBanner').style.display='none';document.getElementById('resultBanner').classList.remove('show');document.getElementById('checkBtn').style.display='';document.getElementById('contBtn').style.display='none';buildGame()}
+function goTo(i){cs=i;gameState.currentSetIdx=i;chk=false;document.getElementById('resultBanner').classList.remove('show','error');document.getElementById('checkBtn').style.display='';document.getElementById('contBtn').style.display='none';buildGame()}
 function upSetNav(){document.getElementById('setDisp').textContent=`Bộ: ${cs+1} / ${gd.length}`;document.getElementById('prevBtn').disabled=cs===0;document.getElementById('nextBtn').disabled=cs===gd.length-1;upSetDots()}
 function prevSet(){if(cs>0){SFX.navigate();goTo(cs-1)}}function nextSet(){if(cs<gd.length-1){SFX.navigate();goTo(cs+1)}}
 function checkAnswers(){if(gameState.checkMode==='all'){checkAllSets()}else{checkCurrentSet()}}
@@ -137,7 +138,7 @@ gameState.globalResults={correct:globalOk,total:globalTot,pct:globalPct};SFX[glo
 const sdp2=document.getElementById('scoreDisp');sdp2.style.display='';sdp2.textContent=`Điểm: ${globalOk}/${globalTot}`;PV.showResult(globalOk,globalTot,PV.checkMsg(globalPct));
 document.getElementById('checkBtn').style.display='none';document.getElementById('contBtn').style.display='';upSetDots()}
 function contGame(){chk=false;document.querySelectorAll('.drop-zone').forEach(z=>z.classList.remove('correct','wrong'));
-document.getElementById('resultBanner').style.display='none';document.getElementById('checkBtn').style.display='';document.getElementById('contBtn').style.display='none';document.getElementById('scoreDisp').style.display='none'}
+document.getElementById('resultBanner').classList.remove('show','error');document.getElementById('checkBtn').style.display='';document.getElementById('contBtn').style.display='none';document.getElementById('scoreDisp').style.display='none'}
 document.getElementById('checkBtn').addEventListener('click',checkAnswers);
 document.getElementById('checkToggle').addEventListener('click',e=>{e.stopPropagation();SFX.click();PV.toggleCheckMode(gameState)});
 document.getElementById('contBtn').addEventListener('click',contGame);
