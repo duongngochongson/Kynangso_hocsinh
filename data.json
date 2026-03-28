@@ -1,13 +1,13 @@
 {
   "enabledGames": {
-    "pros-cons":    true,
-    "mind-map":     true,
-    "matching":     true,
-    "file-naming":  true,
+    "pros-cons": true,
+    "mind-map": true,
+    "matching": true,
+    "file-naming": true,
     "prompt-order": true,
-    "calculator":   true,
-    "mece":         true,
-    "noticeboard":  true
+    "calculator": true,
+    "mece": true,
+    "noticeboard": true
   },
   "fileNaming": {
     "root": "VuTru",
@@ -715,99 +715,63 @@
   },
   "promptOrder": [
     {
-      "id": 1,
+      "id": 1774707511241,
       "setTitle": "BỘ 1",
       "questions": [
         {
-          "id": 1,
+          "id": "1774707511241q",
           "parts": [
             {
-              "type": "role",
-              "text": "Bạn là trợ lý AI thông minh và thân thiện."
+              "type": "task",
+              "text": ""
             },
             {
               "type": "task",
-              "text": "Tóm tắt đoạn văn sau thành 3 gạch đầu dòng ngắn gọn."
-            }
-          ]
-        },
-        {
-          "id": 2,
-          "parts": [
-            {
-              "type": "role",
-              "text": "Bạn là chuyên gia marketing kỹ thuật số."
-            },
-            {
-              "type": "context",
-              "text": "Công ty đang ra mắt ứng dụng học ngôn ngữ mới dành cho học sinh cấp 2."
+              "text": ""
             },
             {
               "type": "task",
-              "text": "Viết bài mô tả sản phẩm cho trang landing page."
-            },
-            {
-              "type": "output",
-              "text": "Bài viết dài 150–200 từ, hấp dẫn và có lời kêu gọi hành động rõ ràng."
-            }
-          ]
-        },
-        {
-          "id": 3,
-          "parts": [
-            {
-              "type": "role",
-              "text": "Bạn là nhà báo công nghệ với 10 năm kinh nghiệm."
-            },
-            {
-              "type": "context",
-              "text": "AI đang thay đổi ngành báo chí toàn cầu một cách nhanh chóng."
+              "text": ""
             },
             {
               "type": "task",
-              "text": "Viết bài phân tích tác động của AI đối với nghề báo hiện đại."
-            },
-            {
-              "type": "output",
-              "text": "Bài viết khoảng 500 từ, chia thành 3–4 đoạn có tiêu đề phụ."
-            },
-            {
-              "type": "style",
-              "text": "Văn phong chuyên nghiệp nhưng dễ hiểu cho người đọc phổ thông."
-            }
-          ]
-        },
-        {
-          "id": 4,
-          "parts": [
-            {
-              "type": "context",
-              "text": "Người dùng muốn học cách nấu phở tại nhà lần đầu tiên."
+              "text": ""
             },
             {
               "type": "task",
-              "text": "Liệt kê nguyên liệu và các bước nấu phở bò cơ bản."
-            }
-          ]
-        },
-        {
-          "id": 5,
-          "parts": [
-            {
-              "type": "role",
-              "text": "Bạn là giáo viên tiếng Anh cấp trung học cơ sở."
+              "text": ""
             },
             {
               "type": "task",
-              "text": "Chữa lỗi ngữ pháp trong đoạn văn tiếng Anh sau của học sinh."
+              "text": ""
             },
             {
-              "type": "output",
-              "text": "Trình bày bản chữa và giải thích ngắn gọn từng lỗi sai."
+              "type": "task",
+              "text": ""
             },
             {
-              "type": "reference",
-              "text": "Dựa theo quy tắc ngữ pháp trong Cambridge Grammar in Use (Elementary)."
+              "type": "task",
+              "text": ""
+            },
+            {
+              "type": "task",
+              "text": ""
+            },
+            {
+              "type": "task",
+              "text": ""
+            },
+            {
+              "type": "task",
+              "text": ""
+            },
+            {
+              "type": "task",
+              "text": ""
+            },
+            {
+              "type": "task",
+              "text": ""
             }
           ]
         }
@@ -816,59 +780,104 @@
   ],
   "prosCons": [
     {
-      "id": 1,
-      "setTitle": "BỘ 1",
+      "id": 1774706367728,
+      "setTitle": "Các cách tìm kiếm",
       "questions": [
         {
           "id": 1,
-          "topic": "Lưu trữ Offline (Cục bộ):",
-          "passage": "Lưu trên ổ cứng máy tính, USB.",
+          "topic": "📚",
+          "passage": "Đọc sách",
           "pro": {
             "id": "p1",
-            "text": "Truy cập nhanh, không cần mạng, bảo mật cá nhân cao."
+            "text": "Kiến thức sâu, có cấu trúc, giúp xây nền tảng vững chắc."
           },
           "con": {
             "id": "c1",
-            "text": "Hỏng thiết bị là mất dữ liệu, chỉ xem được trên đúng thiết bị đó."
+            "text": "Cập nhật chậm, tra cứu không linh hoạt."
           }
         },
         {
           "id": 2,
-          "topic": "Lưu trữ Online (Đám mây - Cloud):",
-          "passage": "Google Drive, OneDrive, iCloud.",
+          "topic": "🌐",
+          "passage": "Công cụ tìm kiếm",
           "pro": {
             "id": "p2",
-            "text": "Truy cập mọi lúc mọi nơi, đồng bộ nhiều thiết bị, không sợ mất máy tính."
+            "text": "Nhanh, phạm vi rộng, cập nhật liên tục."
           },
           "con": {
             "id": "c2",
-            "text": "Cần có Internet, giới hạn dung lượng miễn phí."
+            "text": "Nhiều nhiễu, phụ thuộc kỹ năng tìm kiếm."
           }
         },
         {
           "id": 3,
-          "topic": "Lưu trữ Hệ thống:",
-          "passage": "Tạo cây thư mục nhiều cấp (VD: Cha > Con > Cháu). ",
+          "topic": "🤖 ",
+          "passage": "Hỏi AI",
           "pro": {
             "id": "p3",
-            "text": "Dễ tìm theo logic."
+            "text": "Tổng hợp nhanh, trả lời có ngữ cảnh, tiết kiệm thời gian."
           },
           "con": {
             "id": "c3",
-            "text": "Tốn thời gian sắp xếp."
+            "text": "Có thể sai lệch, thiếu minh bạch nguồn."
+          }
+        }
+      ]
+    },
+    {
+      "id": 1774706699687,
+      "setTitle": "Lưu trữ thông tin",
+      "questions": [
+        {
+          "id": "1774706699687q",
+          "topic": "💾",
+          "passage": "Lưu trữ offline",
+          "pro": {
+            "id": "p1774706699687",
+            "text": "Riêng tư cao, không phụ thuộc internet, độ ổn định tốt."
+          },
+          "con": {
+            "id": "c1774706699687",
+            "text": "Khó truy cập đa thiết bị, rủi ro mất dữ liệu nếu không backup."
           }
         },
         {
-          "id": 1773582375419,
-          "topic": "Lưu trữ Tự do:",
-          "passage": "Lưu tất cả vào một nơi và dựa vào công cụ \"Search\" (Tìm kiếm) để lấy ra. ",
+          "id": 1774706791816,
+          "topic": "☁️",
+          "passage": "Lưu trữ online",
           "pro": {
-            "id": "p1773582375419",
-            "text": "Rất nhanh gọn và dễ."
+            "id": "p1774706791816",
+            "text": "Truy cập mọi lúc mọi nơi, dễ đồng bộ và chia sẻ."
           },
           "con": {
-            "id": "c1773582375419",
-            "text": "Nhưng dễ lộn xộn và dễ quên từ khóa."
+            "id": "c1774706791816",
+            "text": "Phụ thuộc internet, rủi ro bảo mật / quyền riêng tư."
+          }
+        },
+        {
+          "id": 1774706813347,
+          "topic": "🗂️",
+          "passage": "Lưu trữ có hệ thống",
+          "pro": {
+            "id": "p1774706813347",
+            "text": "Dễ tìm kiếm, quản lý, scale tốt khi dữ liệu lớn."
+          },
+          "con": {
+            "id": "c1774706813347",
+            "text": "Tốn thời gian thiết lập, thiếu linh hoạt ban đầu."
+          }
+        },
+        {
+          "id": 1774706835698,
+          "topic": "📝",
+          "passage": "Lưu trữ tự do",
+          "pro": {
+            "id": "p1774706835698",
+            "text": "Linh hoạt, ghi chép nhanh, ít friction khi sử dụng."
+          },
+          "con": {
+            "id": "c1774706835698",
+            "text": "Dễ lộn xộn, khó truy xuất khi dữ liệu tăng."
           }
         }
       ]
@@ -877,27 +886,27 @@
   "mindMap": [
     {
       "id": 1,
-      "title": "Mạng xã hội",
+      "title": "Sơ đồ tư duy khóa học",
       "rowCount": 3,
       "keywords": [
         {
           "id": "k1",
-          "text": "Dự án khóa học KNS",
+          "text": "Hoàn thành sơ đồ tư duy",
           "correctRow": 0
         },
         {
           "id": "k2",
-          "text": "Kỹ năng thuyết trình",
+          "text": "KN thuyết trình",
           "correctRow": 1
         },
         {
           "id": "k3",
-          "text": "Kỹ năng lưu trữ và tìm kiếm",
+          "text": "KN lưu trữ và tìm kiếm",
           "correctRow": 1
         },
         {
           "id": "k4",
-          "text": "Kỹ năng vẽ",
+          "text": "KN vẽ",
           "correctRow": 1
         },
         {
@@ -916,12 +925,12 @@
           "correctRow": 2
         },
         {
-          "id": "k1773583426535",
+          "id": "k1774706981868",
           "text": "Công cụ",
           "correctRow": 2
         },
         {
-          "id": "k1773583427667",
+          "id": "k1774706995368",
           "text": "Tư duy vẽ",
           "correctRow": 2
         }
@@ -936,10 +945,6 @@
           "to": "k3"
         },
         {
-          "from": "k1",
-          "to": "k4"
-        },
-        {
           "from": "k3",
           "to": "k5"
         },
@@ -952,11 +957,11 @@
           "to": "k7"
         },
         {
-          "from": "k1773583426535",
+          "from": "k1774706981868",
           "to": "k4"
         },
         {
-          "from": "k1773583427667",
+          "from": "k1774706995368",
           "to": "k4"
         }
       ]
@@ -965,83 +970,83 @@
   "matching": [
     {
       "id": 1,
-      "title": "Phân biệt Nơi lưu (Offline vs. Online)",
+      "title": "Nhóm logic",
       "leftItems": [
         {
           "id": "L1",
-          "text": "Cần xem tài liệu khi mất mạng Internet"
+          "text": "AND"
         },
         {
           "id": "L2",
-          "text": "Muốn mở bài tập trên cả điện thoại và máy tính"
+          "text": "OR"
         },
         {
           "id": "L3",
-          "text": "Bảo mật tuyệt đối nhật ký cá nhân"
+          "text": "- | ví dụ: apple -fruit"
         },
         {
           "id": "L4",
-          "text": "Sợ hỏng máy tính mất hết dữ liệu quan trọng"
+          "text": "() | ví dụ: (python OR javascript) AND tutorial"
         }
       ],
       "rightItems": [
         {
           "id": "R1",
-          "text": "Lưu trữ Offline"
+          "text": "Bắt buộc có tất cả từ khóa"
         },
         {
           "id": "R2",
-          "text": "Lưu trữ Online"
+          "text": "Một trong các từ khóa"
+        },
+        {
+          "id": "R3",
+          "text": "Loại trừ từ khóa"
+        },
+        {
+          "id": "R4",
+          "text": "Nhóm điều kiện"
         }
       ],
       "connections": [
-        {
-          "from": "L2",
-          "to": "R2"
-        },
         {
           "from": "L1",
           "to": "R1"
         },
         {
+          "from": "L2",
+          "to": "R2"
+        },
+        {
           "from": "L3",
-          "to": "R1"
+          "to": "R3"
         },
         {
           "from": "L4",
-          "to": "R2"
+          "to": "R4"
         }
       ]
     },
     {
       "id": 2,
-      "title": "Phân biệt Cách lưu (Hệ thống vs. Tự do)",
+      "title": "Nhóm khớp nội dung (Matching)",
       "leftItems": [
         {
           "id": "L1",
-          "text": "Phân loại đề thi theo từng môn và khối lớp "
+          "text": "\"...\""
         },
         {
           "id": "L2",
-          "text": "Lưu thật nhanh một chiếc meme hài hước"
-        },
-        {
-          "id": "L3",
-          "text": "Quản lý ảnh theo năm và từng chuyến du lịch"
-        },
-        {
-          "id": "L4",
-          "text": "Tải vội file nháp, chỉ dựa vào thanh tìm kiếm"
+          "text": "* | ví dụ: how to * faster"
         }
       ],
       "rightItems": [
         {
           "id": "R1",
-          "text": "Lưu trữ Hệ thống"
+          "text": "Khớp chính xác cụm từ"
         },
         {
-          "id": "R3",
-          "text": "Lưu trữ Tự do"
+          "id": "R2",
+          "text": "Đại diện từ bất kỳ"
         }
       ],
       "connections": [
@@ -1051,75 +1056,50 @@
         },
         {
           "from": "L2",
-          "to": "R3"
-        },
-        {
-          "from": "L3",
-          "to": "R1"
-        },
-        {
-          "from": "L4",
-          "to": "R3"
+          "to": "R2"
         }
       ]
     },
     {
-      "id": 1773583113229,
-      "title": "Tổng hợp",
+      "id": 1774707381358,
+      "title": "Nhóm giới hạn phạm vi",
       "leftItems": [
         {
-          "id": "L1773583113229a",
-          "text": "Làm bài thuyết trình nhóm cùng lúc với bạn bè"
+          "id": "L1774707381358a",
+          "text": "site:"
         },
         {
-          "id": "L1773583141879",
-          "text": "Tạo thư mục \"Toán\" -> \"Đại số\" -> \"Chương 1\""
+          "id": "L1774707424824",
+          "text": "filetype:"
         },
         {
-          "id": "L1773583142779",
-          "text": "Lưu trữ video nặng để phần mềm chạy mượt"
+          "id": "L1774707426441",
+          "text": "intitle:"
         },
         {
-          "id": "L1773583143647",
-          "text": "Gom tất cả tài liệu ném chung vào mục Download"
+          "id": "L1774707427325",
+          "text": "inurl:"
         }
       ],
       "rightItems": [
         {
-          "id": "R1773583113229b",
-          "text": "Lưu trữ Online"
+          "id": "R1774707381358b",
+          "text": "giới hạn trong 1 website"
         },
         {
-          "id": "R1773583144714",
-          "text": "Lưu trữ Offline"
+          "id": "R1774707428691",
+          "text": "lọc theo loại file"
         },
         {
-          "id": "R1773583145634",
-          "text": "Lưu trữ Hệ thống"
+          "id": "R1774707429503",
+          "text": "từ khóa trong tiêu đề"
         },
         {
-          "id": "R1773583146511",
-          "text": "Lưu trữ Tự do"
+          "id": "R1774707430374",
+          "text": "từ khóa trong URL"
         }
       ],
-      "connections": [
-        {
-          "from": "L1773583113229a",
-          "to": "R1773583113229b"
-        },
-        {
-          "from": "L1773583141879",
-          "to": "R1773583145634"
-        },
-        {
-          "from": "L1773583142779",
-          "to": "R1773583144714"
-        },
-        {
-          "from": "L1773583143647",
-          "to": "R1773583146511"
-        }
-      ]
+      "connections": []
     }
   ],
   "mece": [
@@ -1238,12 +1218,7 @@
     {
       "id": 1,
       "title": "Chào mừng đến PIXELVERSE",
-      "body": "Đây là bảng thông báo của PIXELVERSE. Các thông tin quan trọng, tài nguyên học tập và đường dẫn hữu ích sẽ được đăng tại đây.\n\nHãy bấm 📋 COPY để sao chép nội dung, hoặc bôi đen văn bản để copy thủ công."
-    },
-    {
-      "id": 2,
-      "title": "Tài nguyên về Prompt Engineering",
-      "body": "Một số nguồn tham khảo hữu ích:\n\n• Hướng dẫn chính thức của Anthropic: https://docs.anthropic.com\n• OpenAI Prompt Engineering Guide: https://platform.openai.com/docs/guides/prompt-engineering\n\nCác đường link trên sẽ mở trong tab mới khi bấm vào."
+      "body": "Đây là bảng thông báo của trang web. Các thông tin quan trọng, tài nguyên học tập và đường dẫn hữu ích sẽ được đăng tại đây.\n\nHãy bấm 📋 COPY để sao chép nội dung, hoặc bôi đen văn bản để copy thủ công."
     }
   ]
 }
